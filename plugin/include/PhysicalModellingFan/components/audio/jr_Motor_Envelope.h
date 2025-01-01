@@ -9,13 +9,15 @@
 */
 
 #pragma once
+#include <juce_audio_basics/juce_audio_basics.h>
 
 namespace jr
 {
-    /** A class to simulate the behaviour of an electric DC motor as it turns on and off, by modelling an envelope of its frequency and volume
-    * use setSampleRate() before use, then call process() every sample, and call powerOn() and powerOff() to cause envelope to rise or fall
+    /**
+    A class to simulate the behaviour of an electric DC motor as it turns on and off, by modelling an envelope of its frequency and volume
+    use setSampleRate() before use, then call process() every sample, and call powerOn() and powerOff() to cause envelope to rise or fall
     */
-    class MotorEnvelope
+    class MachineEnvelope
     {
     public:
 
@@ -59,6 +61,7 @@ namespace jr
             phase.setCurrentAndTargetValue (0.0f); 
             phase.reset (sampleRate, powerUpTimeSeconds);
             phase.setTargetValue (0.5f);
+            isOn = true;
         }
 
         /** Simulates motor turning off, by causing envelope to fall to 0 over set time
@@ -94,6 +97,7 @@ namespace jr
                 {
                     currentEnvValue = 0;
                     poweringOff = false;
+                    isOn = false;
                 }
             }
 
@@ -104,6 +108,8 @@ namespace jr
 
         float getCurrentValue() { return currentEnvValue; }
 
+        bool getIsPowerOn() { return isOn; }
+
     private:
         juce::SmoothedValue<float> phase;
         float powerUpTimeSeconds{ 1.5f };           // time in seconds for envelope to rise to max value
@@ -113,5 +119,6 @@ namespace jr
         float sampleRate{};
         float currentEnvValue{};                    // current value of the envelope
         bool poweringOff{ false };
+        bool isOn{ false };
     };
 }

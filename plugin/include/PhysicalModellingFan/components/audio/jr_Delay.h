@@ -9,7 +9,7 @@
 #pragma once
 
 #include <cmath>        // included for floor()
-#include <JuceHeader.h>
+#include <juce_audio_basics/juce_audio_basics.h>
 
 
 namespace jr

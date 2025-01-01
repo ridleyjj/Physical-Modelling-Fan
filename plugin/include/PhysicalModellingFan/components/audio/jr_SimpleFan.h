@@ -9,15 +9,15 @@
 */
 
 #pragma once
-#include "jr_PolyBLEP_Oscillators.h"        // used for jr::polyblepOscillator class
-#include "jr_Delay.h"                       // used for FractionalDelay class
-#include <JuceHeader.h>
+#include "PhysicalModellingFan/components/audio/jr_PolyBLEP_Oscillators.h"        // used for jr::polyblepOscillator class
+#include "PhysicalModellingFan/components/audio/jr_Delay.h"                       // used for FractionalDelay class
+#include <juce_audio_basics/juce_audio_basics.h>
 
 namespace jr
 {
 
     /** A class that models the toned component of a simple Propeller Fan Physical Model.
-    Use setSampleRate() and before use. Call process() each sample to get audio out.
+    Use setSampleRate() before use. Call process() each sample to get audio out.
     */
     class FanToneComponent
     {

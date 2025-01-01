@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "jr_PolyBLEP_Oscillators.h"
+#include "PhysicalModellingFan/components/audio/jr_PolyBLEP_Oscillators.h"
 
 namespace jr
 {

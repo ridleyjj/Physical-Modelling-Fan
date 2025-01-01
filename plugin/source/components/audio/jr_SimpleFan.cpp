@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "jr_SimpleFan.h"
+#include "PhysicalModellingFan/components/audio/jr_SimpleFan.h"
 
 namespace jr
 {
