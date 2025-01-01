@@ -2,8 +2,8 @@
 	
 #include <cmath>		// used for sin() and fabs() and std::fmod()
 
-namespace jr {
-	
+namespace jr
+{
 	/** An Oscillator that can be set to either Sine, Sawtooth, Square, or Triangle mode. 
 	Oscillator starts muted so use setMuted() to unmute, and use setSampleRate() before use 
 	(static member so only needs to be set once for all instances)
@@ -13,7 +13,8 @@ namespace jr {
 	{
 	public:
 
-		enum class OscillatorMode {
+		enum class OscillatorMode
+		{
 			SINE = 0,
 			SAW,
 			SQUARE,
@@ -143,6 +144,4 @@ namespace jr {
 		double polyBLEP (double t);
 
 	};
-	
 }
-
