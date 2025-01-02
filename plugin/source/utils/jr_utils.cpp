@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "jr_utils.h"
+#include <PhysicalModellingFan/utils/jr_utils.h>
 
 float jr::Utils::constrainFloat(float val, float min, float max)
 {

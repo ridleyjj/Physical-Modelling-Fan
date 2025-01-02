@@ -2,6 +2,11 @@
 
 namespace jr
 {
+    Machine::Machine() : envelope(), fan()
+    {
+
+    }
+
     void Machine::setSampleRate(float _sampleRate)
     {
         envelope.setSampleRate(_sampleRate);

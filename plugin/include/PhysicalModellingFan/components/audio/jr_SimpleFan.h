@@ -9,9 +9,11 @@
 */
 
 #pragma once
-#include "PhysicalModellingFan/components/audio/jr_PolyBLEP_Oscillators.h"        // used for jr::polyblepOscillator class
-#include "PhysicalModellingFan/components/audio/jr_Delay.h"                       // used for FractionalDelay class
+
+#include <PhysicalModellingFan/components/audio/jr_PolyBLEP_Oscillators.h>        // used for jr::polyblepOscillator class
+#include <PhysicalModellingFan/components/audio/jr_Delay.h>                       // used for FractionalDelay class
 #include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_core/juce_core.h>
 
 namespace jr
 {
@@ -70,7 +72,7 @@ namespace jr
         float process();
 
     private:
-        jr::polyblepOscillator sineOsc;             // sine oscillator used as base of the tone component
+        polyblepOscillator sineOsc;             // sine oscillator used as base of the tone component
         float phaseShift{};                         // amount of phase shift (0-0.5), used to stagger phase of multiple instances
         float pulseWidth{ 8.0 };                    // pulse width of waveform
         float level{ 1.0f };                        // volume level of tone component (0-1)

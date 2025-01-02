@@ -28,6 +28,10 @@ target_sources(${PROJECT_NAME}
     PRIVATE
         source/PluginEditor.cpp
         source/PluginProcessor.cpp
+        source/components/audio/jr_Machine.cpp
+        source/components/audio/jr_PolyBLEP_Oscillators.cpp
+        source/components/audio/jr_SimpleFan.cpp
+        source/utils/jr_utils.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

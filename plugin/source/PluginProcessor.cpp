@@ -88,9 +88,9 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    juce::ignoreUnused (samplesPerBlock);
+    juce::ignoreUnused (sampleRate, samplesPerBlock);
 
-    machine.setSampleRate(sampleRate);
+    //machine.setSampleRate(sampleRate);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -150,10 +150,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     //=============================== DSP LOOP ===============================//
     for (int i = 0; i < numSamples; i++)
     {
-        machine.process();
+        //machine.process();
 
-        leftChannel[i] = gainVal * machine.getCurrentSampleLeft();
-        rightChannel[i] = gainVal * machine.getCurrentSampleRight();
+        //leftChannel[i] = gainVal * machine.getCurrentSampleLeft();
+        //rightChannel[i] = gainVal * machine.getCurrentSampleRight();
     }
 }
 

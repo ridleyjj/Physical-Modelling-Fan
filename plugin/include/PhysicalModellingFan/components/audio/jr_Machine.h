@@ -1,5 +1,8 @@
+#pragma once
+
 #include <PhysicalModellingFan/components/audio/jr_Motor_Envelope.h>
 #include <PhysicalModellingFan/components/audio/jr_SimpleFan.h>
+#include <PhysicalModellingFan/components/audio/jr_PolyBLEP_Oscillators.h>
 
 namespace jr
 {
@@ -12,7 +15,7 @@ namespace jr
     class Machine
     {
         public:
-            Machine() {}
+            Machine();
 
             void setSampleRate(float _sampleRate);
 
@@ -27,8 +30,8 @@ namespace jr
             float getCurrentSampleRight() { return currentSampleRight; }
 
         private:
-            MachineEnvelope envelope{};
-            FanPropeller fan{};
+            MachineEnvelope envelope;
+            FanPropeller fan;
             float currentSampleLeft{};
             float currentSampleRight{};
     };
