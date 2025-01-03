@@ -2,15 +2,15 @@
 
 namespace jr
 {
-    Machine::Machine() : envelope(), fan()
-    {
-
-    }
-
     void Machine::setSampleRate(float _sampleRate)
     {
-        envelope.setSampleRate(_sampleRate);
-        fan.setSampleRate(_sampleRate);
+        if (_sampleRate > 0)
+        {
+            envelope.setSampleRate(_sampleRate);
+            fan.setSampleRate(_sampleRate);
+
+            fan.setMappedParams(1.0f, 4.0f, 1.0f, 1.0f, 0.5f, true); // default params hard coded for testing
+        }
     }
 
     void Machine::process()

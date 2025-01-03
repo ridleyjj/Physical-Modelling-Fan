@@ -341,13 +341,13 @@ namespace jr
         float getRightSample() { return currentRightSample; }
 
     private:
-        FanToneComponent mainBladesToneComp;            // tone component of main blades
-        FanDopplerComponent mainBladesNoiseComp;        // noise component of main blades with doppler capabilities
-        FanPanner pannerComp;                           // panning component for whole system (controlled by main blades)
+        FanToneComponent mainBladesToneComp{};            // tone component of main blades
+        FanDopplerComponent mainBladesNoiseComp{};        // noise component of main blades with doppler capabilities
+        FanPanner pannerComp{};                           // panning component for whole system (controlled by main blades)
 
-        FanToneComponent fastBladesToneComp;            // tone component of fast blades
-        FanNoiseComponent fastBladesNoiseComp;          // noise component of fast blades
-        FanDelay fastBladesDelayComp;                   // delay component of fast blades
+        FanToneComponent fastBladesToneComp{};            // tone component of fast blades
+        FanNoiseComponent fastBladesNoiseComp{};          // noise component of fast blades
+        FanDelay fastBladesDelayComp{};                   // delay component of fast blades
 
         //============ params ============//
 

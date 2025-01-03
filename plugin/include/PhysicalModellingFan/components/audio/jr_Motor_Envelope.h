@@ -22,6 +22,8 @@ namespace jr
     {
     public:
 
+        MachineEnvelope() {}
+
         //================== mutators ===================//
 
         /** Sets the sample rate
@@ -112,7 +114,7 @@ namespace jr
         bool getIsPowerOn() { return isOn; }
 
     private:
-        juce::SmoothedValue<float> phase;
+        juce::SmoothedValue<float> phase{};
         float powerUpTimeSeconds{ 1.5f };           // time in seconds for envelope to rise to max value
         float powerDownTimeSeconds{ 1.5f };         // time in seconds for envelope to fall from max value
         float volDelta{};                           // increment needed to linearly decrease volume from 1 to 0 over desired power down time

@@ -90,7 +90,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 
-    //machine.setSampleRate(sampleRate);
+    machine.setSampleRate(sampleRate);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -145,15 +145,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     float* rightChannel = buffer.getWritePointer(1);
     int numSamples = buffer.getNumSamples();
     
-    float gainVal = 0.2f;
+    float gainVal = 0.4f;
 
     //=============================== DSP LOOP ===============================//
     for (int i = 0; i < numSamples; i++)
     {
-        //machine.process();
+        machine.process();
 
-        //leftChannel[i] = gainVal * machine.getCurrentSampleLeft();
-        //rightChannel[i] = gainVal * machine.getCurrentSampleRight();
+        leftChannel[i] = gainVal * machine.getCurrentSampleLeft();
+        rightChannel[i] = gainVal * machine.getCurrentSampleRight();
     }
 }
 

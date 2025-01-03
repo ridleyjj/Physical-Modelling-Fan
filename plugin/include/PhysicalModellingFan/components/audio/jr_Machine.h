@@ -15,7 +15,7 @@ namespace jr
     class Machine
     {
         public:
-            Machine();
+            Machine() {}
 
             void setSampleRate(float _sampleRate);
 
@@ -30,8 +30,8 @@ namespace jr
             float getCurrentSampleRight() { return currentSampleRight; }
 
         private:
-            MachineEnvelope envelope;
-            FanPropeller fan;
+            MachineEnvelope envelope{};
+            FanPropeller fan{};
             float currentSampleLeft{};
             float currentSampleRight{};
     };

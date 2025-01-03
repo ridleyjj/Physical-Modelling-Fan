@@ -190,10 +190,10 @@ namespace jr
         }
 
     private:
-        float sampleRate;            // sample rate, Hz
+        float sampleRate{};            // sample rate, Hz
         float* buffer;               // delay buffer, array of floats
-        int size;                    // size of delay buffer in samples (maximum delay length in samples)
-        float delayTimeInSamples;    // current delay time/length in samples
+        int size{};                    // size of delay buffer in samples (maximum delay length in samples)
+        float delayTimeInSamples{};    // current delay time/length in samples
         float feedbackAmt{ 0.0f };   // feedback amount (0 - 1), amount of wet signal fed back through the delay line
         float readPos{ 0.0f };       // index of delay buffer array where output is currently being output from
         int writePos{ 0 };           // index of delay buffer array where delayed signal is currently being written to
