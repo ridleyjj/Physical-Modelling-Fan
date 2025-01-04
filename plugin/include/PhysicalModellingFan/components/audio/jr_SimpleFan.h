@@ -266,16 +266,59 @@ namespace jr
             */
             float getPanControlSignal() { return toneComp.getRawSine(); }
         private:
-            float level{};
+            float level{ 1.0f };
             FanToneComponent toneComp{};            // tone component of main blades
             FanDopplerComponent noiseComp{};        // noise component of main blades with doppler capabilities
+    };
+
+    class FastBlades
+    {
+        public:
+            FastBlades();
+
+            void setSampleRate(float _sampleRate);
+
+            float process();
+
+            /** Sets the chop value for the delay component, which is the modulation depth of the delay length
+            * @param chop - modulation depth of the delay length (ms)
+            */
+            void setChop (float chop) { delayComp.setChop (chop); }
+
+            void setLevel (float vol) { level = vol; }
+
+            /** sets the volume value for the tone component of the fast blades
+            * @param vol - volume level (0-1)
+            */
+            void setToneLevel (float vol) { toneComp.setLevel (vol); }
+
+            /** Sets the volume value for the noise component of the fast blades
+            * @param vol - volume level (0-1)
+            */
+            void setNoiseLevel (float vol) { noiseComp.setLevel (vol); }
+
+            /** Sets the speed of the fan in Hz
+            * @param speedInHz
+            */
+            void setSpeed (float speedInHz) { toneComp.setSpeed(speedInHz); }
+
+            /** Sets the pulse width of the tone components
+            * @param pw - pulse width
+            */
+            void setPulseWidth (float pw) { toneComp.setPulseWidth(pw); }
+
+        private:
+            float level{ 0.65f };
+            FanToneComponent toneComp{};            // tone component of fast blades
+            FanNoiseComponent noiseComp{};          // noise component of fast blades
+            FanDelay delayComp{};                   // delay component of fast blades
     };
 
     class FanPropeller
     {
     public:
 
-        FanPropeller();
+        FanPropeller() {}
 
         //============================ mutators ============================//
 
@@ -312,7 +355,7 @@ namespace jr
         /** Sets the chop value for the delay component, which is the modulation depth of the delay length
         * @param chop - modulation depth of the delay length (ms)
         */
-        void setChop (float chop) { fastBladesDelayComp.setChop (chop); }
+        void setChop (float chop) { fastBlades.setChop (chop); }
 
         /** Sets the doppler effect on or off for the cutoff frequency of the main blades noise component
         * @param isOn - true to turn doppler effect on, false to turn off
@@ -325,7 +368,7 @@ namespace jr
         void setDopplerParams() { mainBlades.setDopplerParams(); }
 
         void setMainBladesLevel (float vol) { mainBlades.setLevel (vol); }
-        void setFastBladesLevel (float vol) { fastBladesLevel = vol; }
+        void setFastBladesLevel (float vol) { fastBlades.setLevel (vol); }
 
         /** sets the volume value for the tone component of the main blades
         * @param vol - volume level (0-1)
@@ -335,7 +378,7 @@ namespace jr
         /** sets the volume value for the tone component of the fast blades
         * @param vol - volume level (0-1)
         */
-        void setFastToneLevel (float vol) { fastBladesToneComp.setLevel (vol); }
+        void setFastToneLevel (float vol) { fastBlades.setToneLevel (vol); }
 
         /** Sets the volume value for the noise component of the main blades
         * @param vol - volume level (0-1)
@@ -345,7 +388,7 @@ namespace jr
         /** Sets the volume value for the noise component of the fast blades
         * @param vol - volume level (0-1)
         */
-        void setFastNoiseLevel (float vol) { fastBladesNoiseComp.setLevel (vol); }
+        void setFastNoiseLevel (float vol) { fastBlades.setNoiseLevel (vol); }
 
         /** Sets the master volume level for the fan
         * @param vol - volume (0-1)
@@ -386,16 +429,11 @@ namespace jr
     private:
         FanPanner pannerComp{};                           // panning component for whole system (controlled by main blades)
         MainBlades mainBlades{};
-
-        FanToneComponent fastBladesToneComp{};            // tone component of fast blades
-        FanNoiseComponent fastBladesNoiseComp{};          // noise component of fast blades
-        FanDelay fastBladesDelayComp{};                   // delay component of fast blades
+        FastBlades fastBlades{};
 
         //============ params ============//
 
         float level{ 0.5f };                            // master volume for fan
-        float mainBladesLevel{ 1.0f };                  // volume level for main blades
-        float fastBladesLevel{ 0.65f };                 // volume level for fast blades
         float currentLeftSample{};                      // current sample value for left channel
         float currentRightSample{};                     // current sample value for right channel
     };

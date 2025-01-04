@@ -125,13 +125,44 @@ namespace jr
         return delayLine.process (audioSignalIn);
     }
 
-    //======================= Fan Propeller =========================//
+    //======================== Main Blades ==========================//
 
-    FanPropeller::FanPropeller()
+    void MainBlades::setSampleRate(float _sampleRate)
     {
-        fastBladesNoiseComp.setFilterType (1);
-        fastBladesToneComp.setPhaseShift (0.25);
+        toneComp.setSampleRate(_sampleRate);
+        noiseComp.setSampleRate(_sampleRate);
     }
+
+    float MainBlades::process()
+    {
+        float toneOut = toneComp.process();
+        setDopplerParams();
+        return level * (toneOut + noiseComp.process (toneComp.getRawSignal()));
+    }
+
+    //======================== Fast Blades ==========================//
+
+    FastBlades::FastBlades()
+    {
+        noiseComp.setFilterType (1);
+        toneComp.setPhaseShift (0.25);
+    }
+
+    void FastBlades::setSampleRate(float _sampleRate)
+    {
+        toneComp.setSampleRate (_sampleRate);
+        noiseComp.setSampleRate (_sampleRate);
+        delayComp.setSampleRate (_sampleRate);
+    }
+
+    float FastBlades::process()
+    {
+        float toneOut = toneComp.process();
+        float noiseOut = noiseComp.process (toneComp.getRawSignal());
+        return level * (toneOut + delayComp.process(toneComp.getRawSine(), noiseOut));
+    }
+
+    //======================= Fan Propeller =========================//
 
     void FanPropeller::setMappedParams (float gainIn, float speedIn, float toneLevelIn, float noiseLevelIn, float stereoWidthIn, bool dopplerOnIn)
     {
@@ -141,21 +172,19 @@ namespace jr
     void FanPropeller::setSampleRate (float sr)
     {
         mainBlades.setSampleRate(sr);
-        fastBladesToneComp.setSampleRate (sr);
-        fastBladesNoiseComp.setSampleRate (sr);
-        fastBladesDelayComp.setSampleRate (sr);
+        fastBlades.setSampleRate (sr);
     }
 
     void FanPropeller::setSpeed (float speedInHz)
     {
         mainBlades.setSpeed(speedInHz);
-        fastBladesToneComp.setSpeed (speedInHz);
+        fastBlades.setSpeed (speedInHz);
     }
 
     void FanPropeller::setPulseWidth (float pw)
     {
         mainBlades.setPulseWidth (pw);
-        fastBladesToneComp.setPulseWidth (pw);
+        fastBlades.setPulseWidth (pw);
     }
 
     void FanPropeller::setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float mainBladesToneLevel, float mainBladesNoiseLevel, float fastBladesToneLevel, float fastBladesNoiseLevel, bool dopplerOn, float chopIn, float panWidthIn)
@@ -175,30 +204,11 @@ namespace jr
 
     void FanPropeller::process()
     {
-        float fastBladesToneOut = fastBladesToneComp.process();
-        float fastBladesNoiseOut = fastBladesNoiseComp.process (fastBladesToneComp.getRawSignal());
-        float fastBladesOut = fastBladesLevel * (fastBladesToneOut + fastBladesDelayComp.process(fastBladesToneComp.getRawSine(), fastBladesNoiseOut));
-        
-        float rawOut = level * (fastBladesOut + mainBlades.process());
+        float rawOut = level * (fastBlades.process() + mainBlades.process());
 
         pannerComp.process (mainBlades.getPanControlSignal());
 
         currentLeftSample = rawOut * pannerComp.getLeft();
         currentRightSample = rawOut * pannerComp.getRight();
-    }
-
-    //============ Main Blades
-
-    void MainBlades::setSampleRate(float _sampleRate)
-    {
-        toneComp.setSampleRate(_sampleRate);
-        noiseComp.setSampleRate(_sampleRate);
-    }
-
-    float MainBlades::process()
-    {
-        float toneOut = toneComp.process();
-        setDopplerParams();
-        return level * (toneOut + noiseComp.process (toneComp.getRawSignal()));
     }
 }
