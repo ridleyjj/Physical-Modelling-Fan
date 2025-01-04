@@ -140,22 +140,21 @@ namespace jr
 
     void FanPropeller::setSampleRate (float sr)
     {
-        mainBladesToneComp.setSampleRate (sr);
+        mainBlades.setSampleRate(sr);
         fastBladesToneComp.setSampleRate (sr);
-        mainBladesNoiseComp.setSampleRate (sr);
         fastBladesNoiseComp.setSampleRate (sr);
         fastBladesDelayComp.setSampleRate (sr);
     }
 
     void FanPropeller::setSpeed (float speedInHz)
     {
-        mainBladesToneComp.setSpeed (speedInHz);
+        mainBlades.setSpeed(speedInHz);
         fastBladesToneComp.setSpeed (speedInHz);
     }
 
     void FanPropeller::setPulseWidth (float pw)
     {
-        mainBladesToneComp.setPulseWidth (pw);
+        mainBlades.setPulseWidth (pw);
         fastBladesToneComp.setPulseWidth (pw);
     }
 
@@ -176,19 +175,30 @@ namespace jr
 
     void FanPropeller::process()
     {
-        float mainBladesToneOut = mainBladesToneComp.process();
-        setDopplerParams();
-        float mainBladesOut = mainBladesLevel * (mainBladesToneOut + mainBladesNoiseComp.process (mainBladesToneComp.getRawSignal()));
-
         float fastBladesToneOut = fastBladesToneComp.process();
         float fastBladesNoiseOut = fastBladesNoiseComp.process (fastBladesToneComp.getRawSignal());
         float fastBladesOut = fastBladesLevel * (fastBladesToneOut + fastBladesDelayComp.process(fastBladesToneComp.getRawSine(), fastBladesNoiseOut));
         
-        float rawOut = level * (fastBladesOut + mainBladesOut);
+        float rawOut = level * (fastBladesOut + mainBlades.process());
 
-        pannerComp.process (mainBladesToneComp.getRawSine());
+        pannerComp.process (mainBlades.getPanControlSignal());
 
         currentLeftSample = rawOut * pannerComp.getLeft();
         currentRightSample = rawOut * pannerComp.getRight();
+    }
+
+    //============ Main Blades
+
+    void MainBlades::setSampleRate(float _sampleRate)
+    {
+        toneComp.setSampleRate(_sampleRate);
+        noiseComp.setSampleRate(_sampleRate);
+    }
+
+    float MainBlades::process()
+    {
+        float toneOut = toneComp.process();
+        setDopplerParams();
+        return level * (toneOut + noiseComp.process (toneComp.getRawSignal()));
     }
 }

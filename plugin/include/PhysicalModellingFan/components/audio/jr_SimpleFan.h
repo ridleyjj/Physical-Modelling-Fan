@@ -227,6 +227,50 @@ namespace jr
         float rightLevel{};                  // volume level for right channel
     };
 
+    class MainBlades
+    {
+        public:
+            void setLevel (float vol) { level = vol; }
+
+            void setSampleRate(float _sampleRate);
+
+            /** sets the volume value for the tone component of the main blades
+            * @param vol - volume level (0-1)
+            */
+            void setToneLevel (float vol) { toneComp.setLevel (vol); }
+
+            /** Sets the volume value for the noise component of the main blades
+            * @param vol - volume level (0-1)
+            */
+            void setNoiseLevel (float vol) { noiseComp.setLevel (vol); }
+
+            /** Sets the doppler effect on or off for the cutoff frequency of the main blades noise component
+            * @param isOn - true to turn doppler effect on, false to turn off
+            */
+            void setDopplerOn (bool isOn) { noiseComp.setDopplerOn (isOn); }
+
+            /** Updates the doppler effected noise components cutoff frequency value using the raw sine signal from the main blades tone comp as a control signal
+            * @return
+            */
+            void setDopplerParams() { noiseComp.setDopplerParams (toneComp.getRawSine()); }
+
+            void setSpeed(float speedInHz) { toneComp.setSpeed(speedInHz); }
+            
+            void setPulseWidth(float pw) { toneComp.setPulseWidth(pw); }
+
+            /** processes the next mono sample value for the main blades
+            */
+            float process();
+
+            /** returns the raw signal value from the tone component to be used for controlling a panning component
+            */
+            float getPanControlSignal() { return toneComp.getRawSine(); }
+        private:
+            float level{};
+            FanToneComponent toneComp{};            // tone component of main blades
+            FanDopplerComponent noiseComp{};        // noise component of main blades with doppler capabilities
+    };
+
     class FanPropeller
     {
     public:
@@ -273,20 +317,20 @@ namespace jr
         /** Sets the doppler effect on or off for the cutoff frequency of the main blades noise component
         * @param isOn - true to turn doppler effect on, false to turn off
         */
-        void setDopplerOn (bool isOn) { mainBladesNoiseComp.setDopplerOn (isOn); }
+        void setDopplerOn (bool isOn) { mainBlades.setDopplerOn (isOn); }
 
         /** Updates the doppler effected noise components cutoff frequency value using the raw sine signal from the main blades tone comp as a control signal
         * @return
         */
-        void setDopplerParams() { mainBladesNoiseComp.setDopplerParams (mainBladesToneComp.getRawSine()); }
+        void setDopplerParams() { mainBlades.setDopplerParams(); }
 
-        void setMainBladesLevel (float vol) { mainBladesLevel = vol; }
+        void setMainBladesLevel (float vol) { mainBlades.setLevel (vol); }
         void setFastBladesLevel (float vol) { fastBladesLevel = vol; }
 
         /** sets the volume value for the tone component of the main blades
         * @param vol - volume level (0-1)
         */
-        void setMainToneLevel (float vol) { mainBladesToneComp.setLevel (vol); }
+        void setMainToneLevel (float vol) { mainBlades.setToneLevel (vol); }
 
         /** sets the volume value for the tone component of the fast blades
         * @param vol - volume level (0-1)
@@ -296,7 +340,7 @@ namespace jr
         /** Sets the volume value for the noise component of the main blades
         * @param vol - volume level (0-1)
         */
-        void setMainNoiseLevel (float vol) { mainBladesNoiseComp.setLevel (vol); }
+        void setMainNoiseLevel (float vol) { mainBlades.setNoiseLevel (vol); }
 
         /** Sets the volume value for the noise component of the fast blades
         * @param vol - volume level (0-1)
@@ -326,7 +370,6 @@ namespace jr
         //============================ accessors ============================//
 
         /** processes the next sample values for the fans left and right channels
-        * @return
         */
         void process();
 
@@ -341,9 +384,8 @@ namespace jr
         float getRightSample() { return currentRightSample; }
 
     private:
-        FanToneComponent mainBladesToneComp{};            // tone component of main blades
-        FanDopplerComponent mainBladesNoiseComp{};        // noise component of main blades with doppler capabilities
         FanPanner pannerComp{};                           // panning component for whole system (controlled by main blades)
+        MainBlades mainBlades{};
 
         FanToneComponent fastBladesToneComp{};            // tone component of fast blades
         FanNoiseComponent fastBladesNoiseComp{};          // noise component of fast blades
