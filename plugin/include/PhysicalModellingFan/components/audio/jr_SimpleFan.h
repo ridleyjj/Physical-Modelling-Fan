@@ -370,6 +370,10 @@ namespace jr
         void setMainBladesLevel (float vol) { mainBlades.setLevel (vol); }
         void setFastBladesLevel (float vol) { fastBlades.setLevel (vol); }
 
+        void setToneLevel(float toneLevel);
+
+        void setNoiseLevel(float noiseLevel);
+
         /** sets the volume value for the tone component of the main blades
         * @param vol - volume level (0-1)
         */
@@ -400,15 +404,13 @@ namespace jr
         * @param masterVol
         * @param mainBladesLevelIn
         * @param fastBladesLevelIn
-        * @param mainBladesToneLevel
-        * @param mainBladesNoiseLevel
-        * @param fastBladesToneLevel
-        * @param fastBladesNoiseLevel
+        * @param toneLevel
+        * @param noiseLevel
         * @param dopplerOn
         * @param chopIn
         * @param panWidthIn
         */
-        void setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float mainBladesToneLevel, float mainBladesNoiseLevel, float fastBladesToneLevel, float fastBladesNoiseLevel, bool dopplerOn, float chopIn, float panWidthIn);
+        void setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float toneLevel, float noiseLevel, bool dopplerOn, float chopIn, float panWidthIn);
 
         //============================ accessors ============================//
 

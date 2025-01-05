@@ -29,6 +29,15 @@ namespace jr
             
             float getCurrentSampleRight() { return currentSampleRight; }
 
+            //================= Fan Mutators =================//
+
+            void setSpeed(float speedInHz) { fan.setSpeed(speedInHz); }
+            void setFanLevel(float level) { fan.setLevel(level); }
+            void setFanToneLevel(float level) { fan.setToneLevel(level); }
+            void setFanNoiseLevel(float level) { fan.setNoiseLevel(level); }
+            void setFanStereoWidth(float level) { fan.setPanWidth(level); }
+            void setFanDoppler(bool isOn) { fan.setDopplerOn(isOn); }
+
         private:
             MachineEnvelope envelope{};
             FanPropeller fan{};

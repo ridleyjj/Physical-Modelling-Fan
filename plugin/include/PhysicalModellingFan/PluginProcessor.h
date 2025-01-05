@@ -1,7 +1,19 @@
 #pragma once
 
+#include <juce_core/juce_core.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <PhysicalModellingFan/components/audio/jr_Machine.h>
+#include <PhysicalModellingFan/components/audio/ApvtsListener.h>
+
+namespace ID
+{
+    const juce::String GAIN = "GAIN";
+    const juce::String SPEED = "SPEED";
+    const juce::String FAN_TONE = "FAN_TONE";
+    const juce::String FAN_NOISE = "FAN_NOISE";
+    const juce::String FAN_WIDTH = "FAN_WIDTH";
+    const juce::String FAN_DOPPLER = "FAN_DOPPLER";
+}
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -43,9 +55,30 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+
+    void setSpeed(float speed) { machine.setSpeed(speed); }
+    void setMasterGain(float gain) { machine.setFanLevel(gain); }
+    void setFanToneLevel(float level) { machine.setFanToneLevel(level); }
+    void setFanNoiseLevel(float level) { machine.setFanNoiseLevel(level); }
+    void setFanStereoWidth(float width) { machine.setFanStereoWidth(width); }
+    void setFanDoppler(bool isOn) { machine.setFanDoppler(isOn); }
+
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 
     jr::Machine machine{};
+
+    juce::AudioProcessorValueTreeState apvts;
+
+    jr::ApvtsListener masterGainListener{ [&](float newValue) { setMasterGain(newValue); } };
+    jr::ApvtsListener speedListener{ [&](float newValue) { setSpeed(newValue); } };
+    jr::ApvtsListener fanToneLevelListener{ [&](float newValue) { setFanToneLevel(newValue); } };
+    jr::ApvtsListener fanNoiseLevelListener{ [&](float newValue) { setFanNoiseLevel(newValue); } };
+    jr::ApvtsListener fanStereoWidthListener{ [&](float newValue) { setFanStereoWidth(newValue); } };
+    jr::ApvtsListener fanDopplerToggleListener{ [&](bool newValue) { setFanDoppler(newValue); } };
+
 };

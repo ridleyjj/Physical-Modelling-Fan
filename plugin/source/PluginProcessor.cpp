@@ -10,12 +10,24 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "PARAMETERS", createParameterLayout())
 {
+    apvts.addParameterListener(ID::GAIN, &masterGainListener);
+    apvts.addParameterListener(ID::SPEED, &speedListener);
+    apvts.addParameterListener(ID::FAN_TONE, &fanToneLevelListener);
+    apvts.addParameterListener(ID::FAN_NOISE, &fanNoiseLevelListener);
+    apvts.addParameterListener(ID::FAN_WIDTH, &fanStereoWidthListener);
+    apvts.addParameterListener(ID::FAN_DOPPLER, &fanDopplerToggleListener);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
+    apvts.removeParameterListener(ID::GAIN, &masterGainListener);
+    apvts.removeParameterListener(ID::SPEED, &speedListener);
+    apvts.removeParameterListener(ID::FAN_TONE, &fanToneLevelListener);
+    apvts.removeParameterListener(ID::FAN_NOISE, &fanNoiseLevelListener);
+    apvts.removeParameterListener(ID::FAN_WIDTH, &fanStereoWidthListener);
+    apvts.removeParameterListener(ID::FAN_DOPPLER, &fanDopplerToggleListener);
 }
 
 //==============================================================================
@@ -189,4 +201,20 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
+}
+
+//==============================================================================
+// Creates parameters for APVTS
+juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN, "Gain", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::SPEED, "Speed", 0.0f, 1.0f, 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::FAN_TONE, "Tone Level", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_NOISE, "Noise Level", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_WIDTH, "Stereo Width", 0.0f, 1.0f, 0.5f));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_DOPPLER, "Doppler On/Off", false, "Doppler On/Off"));
+
+    return layout;
 }

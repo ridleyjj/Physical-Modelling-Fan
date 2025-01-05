@@ -166,7 +166,7 @@ namespace jr
 
     void FanPropeller::setMappedParams (float gainIn, float speedIn, float toneLevelIn, float noiseLevelIn, float stereoWidthIn, bool dopplerOnIn)
     {
-        setParams (speedIn, gainIn, 1.0f, 1.0f, toneLevelIn, noiseLevelIn, toneLevelIn, noiseLevelIn, dopplerOnIn, 10.0f, stereoWidthIn);
+        setParams (speedIn, gainIn, 1.0f, 1.0f, toneLevelIn, noiseLevelIn, dopplerOnIn, 10.0f, stereoWidthIn);
     }
 
     void FanPropeller::setSampleRate (float sr)
@@ -187,16 +187,26 @@ namespace jr
         fastBlades.setPulseWidth (pw);
     }
 
-    void FanPropeller::setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float mainBladesToneLevel, float mainBladesNoiseLevel, float fastBladesToneLevel, float fastBladesNoiseLevel, bool dopplerOn, float chopIn, float panWidthIn)
+    void FanPropeller::setToneLevel(float toneLevel)
+    {
+        mainBlades.setToneLevel(toneLevel);
+        fastBlades.setToneLevel(toneLevel);
+    }
+
+    void FanPropeller::setNoiseLevel(float noiseLevel)
+    {
+        mainBlades.setNoiseLevel(noiseLevel);
+        fastBlades.setNoiseLevel(noiseLevel);
+    }
+
+    void FanPropeller::setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float toneLevel, float noiseLevel, bool dopplerOn, float chopIn, float panWidthIn)
     {
         setSpeed (speedInHz);
         setLevel (masterVol);
         setMainBladesLevel (mainBladesLevelIn);
         setFastBladesLevel (fastBladesLevelIn);
-        setMainToneLevel (mainBladesToneLevel);
-        setFastToneLevel (fastBladesToneLevel);
-        setMainNoiseLevel (mainBladesNoiseLevel);
-        setFastNoiseLevel (fastBladesNoiseLevel);
+        setToneLevel(toneLevel);
+        setNoiseLevel(noiseLevel);
         setDopplerOn (dopplerOn);
         setChop (chopIn);
         setPanWidth (panWidthIn);
