@@ -210,9 +210,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN, "Gain", 0.0f, 1.0f, 1.0f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::SPEED, "Speed", 0.0f, 1.0f, 0.0f));
-    layout.add(std::make_unique<juce::AudioParameterInt>(ID::FAN_TONE, "Tone Level", 0.0f, 1.0f, 1.0f));
-    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_NOISE, "Noise Level", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::SPEED, "Speed", 1.0f, 10.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_TONE, "Tone Level", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_NOISE, "Noise Level", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_WIDTH, "Stereo Width", 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_DOPPLER, "Doppler On/Off", false, "Doppler On/Off"));
 

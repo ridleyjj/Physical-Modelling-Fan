@@ -32,6 +32,7 @@ target_sources(${PROJECT_NAME}
         source/components/audio/jr_PolyBLEP_Oscillators.cpp
         source/components/audio/jr_SimpleFan.cpp
         source/utils/jr_utils.cpp
+        source/components/gui/MirrorSliderAttachment.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

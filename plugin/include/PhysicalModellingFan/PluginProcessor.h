@@ -64,6 +64,8 @@ public:
     void setFanStereoWidth(float width) { machine.setFanStereoWidth(width); }
     void setFanDoppler(bool isOn) { machine.setFanDoppler(isOn); }
 
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
+
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
