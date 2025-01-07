@@ -46,8 +46,8 @@ namespace jr
         */
         void setSize (float maxDelayTime)
         {
-            if (maxDelayTime < 0.01) size = 0.01 * sampleRate;
-            else                     size = maxDelayTime * sampleRate;
+            if (maxDelayTime < 0.01) size = static_cast<int> (0.01f * sampleRate);
+            else                     size = static_cast<int>  (maxDelayTime * sampleRate);
             buffer = new float[size];
 
             clearBuffer();
@@ -173,7 +173,7 @@ namespace jr
         */
         float linearInterpolation (float readPosIn)
         {
-            int indexA = floor (readPosIn);
+            int indexA = static_cast<int> (readPosIn);
             int indexB = indexA + 1;
 
             if (indexB >= size)

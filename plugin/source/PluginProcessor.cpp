@@ -98,11 +98,12 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
+    juce::ignoreUnused (samplesPerBlock);
 
-    machine.setSampleRate(sampleRate);
+    machine.setSampleRate((float) sampleRate);
+    machine.setSpeed(*apvts.getRawParameterValue(ID::SPEED));
+    machine.setFanDoppler(*apvts.getRawParameterValue(ID::FAN_DOPPLER));
+    machine.setFanLevel(*apvts.getRawParameterValue(ID::GAIN));
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -183,17 +184,21 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+    {
+        if (xmlState->hasTagName(apvts.state.getType()))
+        {
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+        }
+    }
 }
 
 //==============================================================================
@@ -214,7 +219,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_TONE, "Tone Level", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_NOISE, "Noise Level", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_WIDTH, "Stereo Width", 0.0f, 1.0f, 0.5f));
-    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_DOPPLER, "Doppler On/Off", false, "Doppler On/Off"));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_DOPPLER, "Doppler On/Off", false));
 
     return layout;
 }

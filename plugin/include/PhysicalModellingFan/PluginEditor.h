@@ -39,7 +39,7 @@ private:
 
     // Buttons & Labels
 
-    juce::ToggleButton fanDopplerButton{};
+    juce::ToggleButton fanDopplerButton{ "Doppler On/Off" };
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> dopplerAttachment;
 

@@ -20,7 +20,7 @@ namespace jr
         rawSineSignal = sineOsc.processSingleSample();
 
         // waveshaping technique of 1/(1 + x^2) used to obtain narrow pulse wave
-        rawSignal = 1.0f / (1.0f + pow(rawSineSignal * pulseWidth, 2));
+        rawSignal = static_cast<float> (1.0 / (1.0 + pow(rawSineSignal * pulseWidth, 2)));
 
         return rawSignal * level;
     }
@@ -113,7 +113,7 @@ namespace jr
         sampleRate = sr;
 
         delayLine.setSampleRate (sampleRate);
-        delayLine.setSize (0.4);
+        delayLine.setSize (0.4f);
     }
 
     float FanDelay::process (float controlSignalIn, float audioSignalIn)
@@ -164,18 +164,13 @@ namespace jr
 
     //======================= Fan Propeller =========================//
 
-    void FanPropeller::setMappedParams (float gainIn, float speedIn, float toneLevelIn, float noiseLevelIn, float stereoWidthIn, bool dopplerOnIn)
-    {
-        setParams (speedIn, gainIn, 1.0f, 1.0f, toneLevelIn, noiseLevelIn, dopplerOnIn, 10.0f, stereoWidthIn);
-    }
-
     void FanPropeller::setSampleRate (float sr)
     {
         mainBlades.setSampleRate(sr);
         fastBlades.setSampleRate (sr);
     }
 
-    void FanPropeller::setSpeed (float speedInHz)
+    void FanPropeller::setCurrentSpeed (float speedInHz)
     {
         mainBlades.setSpeed(speedInHz);
         fastBlades.setSpeed (speedInHz);
@@ -199,21 +194,11 @@ namespace jr
         fastBlades.setNoiseLevel(noiseLevel);
     }
 
-    void FanPropeller::setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float toneLevel, float noiseLevel, bool dopplerOn, float chopIn, float panWidthIn)
+    void FanPropeller::process(float envelope)
     {
-        setSpeed (speedInHz);
-        setLevel (masterVol);
-        setMainBladesLevel (mainBladesLevelIn);
-        setFastBladesLevel (fastBladesLevelIn);
-        setToneLevel(toneLevel);
-        setNoiseLevel(noiseLevel);
-        setDopplerOn (dopplerOn);
-        setChop (chopIn);
-        setPanWidth (panWidthIn);
-    }
+        float currentSpeed = maxSpeed * envelope;
+        setCurrentSpeed(currentSpeed);
 
-    void FanPropeller::process()
-    {
         float rawOut = level * (fastBlades.process() + mainBlades.process());
 
         pannerComp.process (mainBlades.getPanControlSignal());

@@ -32,9 +32,17 @@ namespace jr
 
         void sliderValueChanged(juce::Slider* _slider) override;
 
-        void sliderDragStarted(juce::Slider* s) override { paramAttachment.beginGesture(); };
+        void sliderDragStarted(juce::Slider* s) override
+        {
+            juce::ignoreUnused(s);
+            paramAttachment.beginGesture();
+        };
 
-        void sliderDragEnded(juce::Slider* s) override { paramAttachment.endGesture(); };
+        void sliderDragEnded(juce::Slider* s) override
+        {
+            juce::ignoreUnused(s);
+            paramAttachment.endGesture();
+        };
 
     private:
 
@@ -47,7 +55,7 @@ namespace jr
             [&](float newValue)
             {
                 newValue = abs(newValue);
-                newValue = jr::Utils::constrainFloat(newValue, 0.0f, slider.getMaximum());
+                newValue = jr::Utils::constrainFloat(newValue, 0.0f, (float) slider.getMaximum());
                 slider.setMaxValue(newValue, juce::dontSendNotification);
                 slider.setMinValue(newValue * -1, juce::dontSendNotification);
             }

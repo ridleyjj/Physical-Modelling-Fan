@@ -322,25 +322,17 @@ namespace jr
 
         //============================ mutators ============================//
 
-        /** Sets the parameters of the Fan via a set of simplified parameters that the others are mapped to
-        * @param gainIn - master gain for fan (0-1)
-        * @param speedRatioIn - fan speed (Hz)
-        * @param toneLevelIn - level of tone components (0-1)
-        * @param noiseLevelIn - level of noise components (0-1)
-        * @param stereoWidthIn - stereo width of the fan panner (0-1)
-        * @param dopplerOnIn - true if doppler effect on for fan
-        */
-        void setMappedParams (float gainIn, float speedIn, float toneLevelIn, float noiseLevelIn, float stereoWidthIn, bool dopplerOnIn);
-
         /** Sets the sample rate
         * @param sr - sample rate (Hz)
         */
         void setSampleRate (float sr);
 
-        /** Sets the speed of the fan in Hz
+        /** Sets the max speed of the fan in Hz
         * @param speedInHz
         */
-        void setSpeed (float speedInHz);
+        void setSpeed (float speedInHz) { 
+            maxSpeed = speedInHz;
+        };
 
         /** Sets the pulse width of the tone components
         * @param pw - pulse width
@@ -399,24 +391,11 @@ namespace jr
         */ 
         void setLevel (float vol) { level = vol; }
 
-        /** Sets parameters of Fan in one function
-        * @param speedInHz
-        * @param masterVol
-        * @param mainBladesLevelIn
-        * @param fastBladesLevelIn
-        * @param toneLevel
-        * @param noiseLevel
-        * @param dopplerOn
-        * @param chopIn
-        * @param panWidthIn
-        */
-        void setParams (float speedInHz, float masterVol, float mainBladesLevelIn, float fastBladesLevelIn, float toneLevel, float noiseLevel, bool dopplerOn, float chopIn, float panWidthIn);
-
-        //============================ accessors ============================//
-
         /** processes the next sample values for the fans left and right channels
         */
-        void process();
+        void process(float envelope);
+        
+        //============================ accessors ============================//
 
         /** returns the current sample value for the left channel of the fan
         * @return sampleOut
@@ -429,12 +408,20 @@ namespace jr
         float getRightSample() { return currentRightSample; }
 
     private:
+
+        /** Sets the current speed of the fan tone and noise components in Hz
+        Used to set the current value based on the maxSpeed and current envelope value
+        * @param speedInHz
+        */
+        void setCurrentSpeed (float speedInHz);
+
         FanPanner pannerComp{};                           // panning component for whole system (controlled by main blades)
         MainBlades mainBlades{};
         FastBlades fastBlades{};
 
         //============ params ============//
 
+        float maxSpeed{};                               // max speed in Hz
         float level{ 0.5f };                            // master volume for fan
         float currentLeftSample{};                      // current sample value for left channel
         float currentRightSample{};                     // current sample value for right channel

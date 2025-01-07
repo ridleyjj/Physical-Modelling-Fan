@@ -32,6 +32,8 @@ namespace jr
 
         void parameterChanged(const juce::String& parameterID, float newValue) override
         {
+            juce::ignoreUnused(parameterID);
+            
             if (callback)
             {
                 callback(newValue);

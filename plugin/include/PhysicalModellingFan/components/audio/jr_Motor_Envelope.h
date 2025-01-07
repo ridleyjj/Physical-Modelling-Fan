@@ -83,7 +83,7 @@ namespace jr
         {
             if (!poweringOff)
             {
-                float currentPhaseVal = phase.getNextValue() * 2.0;
+                float currentPhaseVal = phase.getNextValue() * 2.0f;
 
                 float risingVal = 1.0f - juce::jmin (1.0f, currentPhaseVal);
                 risingVal = pow (risingVal, (3.0f + (accelRate * 6.0f)));

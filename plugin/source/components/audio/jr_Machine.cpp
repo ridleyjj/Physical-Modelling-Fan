@@ -8,8 +8,6 @@ namespace jr
         {
             envelope.setSampleRate(_sampleRate);
             fan.setSampleRate(_sampleRate);
-
-            fan.setMappedParams(1.0f, 4.0f, 1.0f, 1.0f, 0.5f, true); // default params hard coded for testing
         }
     }
 
@@ -22,7 +20,7 @@ namespace jr
         }
 
         envelope.process();
-        fan.process();
+        fan.process(envelope.getCurrentValue());
 
         currentSampleLeft = fan.getLeftSample() * envelope.getCurrentValue();
         currentSampleRight = fan.getRightSample() * envelope.getCurrentValue();
