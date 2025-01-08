@@ -40,8 +40,9 @@ private:
     // Buttons & Labels
 
     juce::ToggleButton fanDopplerButton{ "Doppler On/Off" };
+    juce::ToggleButton powerButton{ "Power On/Off" };
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> dopplerAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> dopplerAttachment, powerButtonAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };

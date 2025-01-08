@@ -18,6 +18,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.addParameterListener(ID::FAN_NOISE, &fanNoiseLevelListener);
     apvts.addParameterListener(ID::FAN_WIDTH, &fanStereoWidthListener);
     apvts.addParameterListener(ID::FAN_DOPPLER, &fanDopplerToggleListener);
+    apvts.addParameterListener(ID::POWER, &powerToggleListener);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -28,6 +29,7 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     apvts.removeParameterListener(ID::FAN_NOISE, &fanNoiseLevelListener);
     apvts.removeParameterListener(ID::FAN_WIDTH, &fanStereoWidthListener);
     apvts.removeParameterListener(ID::FAN_DOPPLER, &fanDopplerToggleListener);
+    apvts.removeParameterListener(ID::POWER, &powerToggleListener);
 }
 
 //==============================================================================
@@ -220,6 +222,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_NOISE, "Noise Level", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FAN_WIDTH, "Stereo Width", 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::FAN_DOPPLER, "Doppler On/Off", false));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::POWER, "Power On/Off", false));
 
     return layout;
 }

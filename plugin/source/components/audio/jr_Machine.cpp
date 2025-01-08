@@ -13,12 +13,6 @@ namespace jr
 
     void Machine::process()
     {
-        if (!envelope.getIsPowerOn())
-        {
-            // hard coded for testing until GUI is created
-            envelope.powerOn();
-        }
-
         envelope.process();
         fan.process(envelope.getCurrentValue());
 

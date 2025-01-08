@@ -13,6 +13,7 @@ namespace ID
     const juce::String FAN_NOISE = "FAN_NOISE";
     const juce::String FAN_WIDTH = "FAN_WIDTH";
     const juce::String FAN_DOPPLER = "FAN_DOPPLER";
+    const juce::String POWER = "POWER";
 }
 
 //==============================================================================
@@ -57,6 +58,7 @@ public:
 
     //==============================================================================
 
+    void togglePower(bool powerOn) { machine.togglePower(powerOn); }
     void setSpeed(float speed) { machine.setSpeed(speed); }
     void setMasterGain(float gain) { machine.setFanLevel(gain); }
     void setFanToneLevel(float level) { machine.setFanToneLevel(level); }
@@ -82,5 +84,6 @@ private:
     jr::ApvtsListener fanNoiseLevelListener{ [&](float newValue) { setFanNoiseLevel(newValue); } };
     jr::ApvtsListener fanStereoWidthListener{ [&](float newValue) { setFanStereoWidth(newValue); } };
     jr::ApvtsListener fanDopplerToggleListener{ [&](bool newValue) { setFanDoppler(newValue); } };
+    jr::ApvtsListener powerToggleListener{ [&](bool newValue) { togglePower(newValue); } };
 
 };

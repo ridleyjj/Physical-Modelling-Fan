@@ -21,8 +21,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     fanWidthAttachment = std::make_unique<jr::MirrorSliderAttachment>(*(processorRef.getAPVTS().getParameter(ID::FAN_WIDTH)), fanWidthSlider);
 
     addAndMakeVisible(fanDopplerButton);
+    addAndMakeVisible(powerButton);
 
     dopplerAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(processorRef.getAPVTS(), ID::FAN_DOPPLER, fanDopplerButton);
+    powerButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(processorRef.getAPVTS(), ID::POWER, powerButton);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -62,6 +64,7 @@ void AudioPluginAudioProcessorEditor::resized()
 {
     // top horizontal row
     gainSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.2f);
+    powerButton.setBoundsRelative(0.4f, 0.1f, 0.2f, 0.2f);
     fanDopplerButton.setBoundsRelative(0.7f, 0.1f, 0.2f, 0.2f);
 
     // parallel vertical sliders

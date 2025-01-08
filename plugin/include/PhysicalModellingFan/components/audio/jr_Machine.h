@@ -29,6 +29,8 @@ namespace jr
             
             float getCurrentSampleRight() { return currentSampleRight; }
 
+            void togglePower(bool powerOn) { powerOn ? envelope.powerOn() : envelope.powerOff(); }
+
             //================= Fan Mutators =================//
 
             void setSpeed(float speedInHz) { fan.setSpeed(speedInHz); }

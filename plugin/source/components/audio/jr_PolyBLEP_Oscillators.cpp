@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    jr_PolyBLEP_Oscillators.cpp
-    Created: 11 Apr 2022 2:14:20pm
-    Author:  ridle
+	jr_PolyBLEP_Oscillators.cpp
+	Created: 11 Apr 2022 2:14:20pm
+	Author:  ridle
 
   ==============================================================================
 */
@@ -15,12 +15,12 @@ namespace jr
 
 	//================================ Oscillator Class ===================================//
 
-	//initialise static member outside of class to a default value
-	double Oscillator::sampleRate{ 44100 };
+	// initialise static member outside of class to a default value
+	double Oscillator::sampleRate{44100};
 
 	//====================== Mutator Functions ===========================//
 
-	void Oscillator::setSampleRate (double sr)
+	void Oscillator::setSampleRate(double sr)
 	{
 		if (sr > 0)
 		{
@@ -30,12 +30,12 @@ namespace jr
 		}
 	}
 
-	void Oscillator::setMode (OscillatorMode mode)
+	void Oscillator::setMode(OscillatorMode mode)
 	{
 		oscMode = mode;
 	}
 
-	void Oscillator::setFrequency (double freq)
+	void Oscillator::setFrequency(double freq)
 	{
 		if (freq > 0)
 		{
@@ -50,11 +50,11 @@ namespace jr
 	float Oscillator::processSingleSample()
 	{
 
-		float sampleOut{};
+		double sampleOut{};
 
 		if (!isMuted)
 		{
-			sampleOut = naiveWaveformForMode (oscMode);
+			sampleOut = naiveWaveformForMode(oscMode);
 		}
 
 		phase += phaseDelta;
@@ -62,18 +62,18 @@ namespace jr
 		if ((phase + phaseShift) >= 1)
 			phase -= 1;
 
-		return sampleOut;
+		return static_cast<float>(sampleOut);
 	}
 
-	float Oscillator::naiveWaveformForMode (OscillatorMode mode)
+	double Oscillator::naiveWaveformForMode(OscillatorMode mode)
 	{
-		float value{};
+		double value{};
 
 		switch (mode)
 		{
 		default:
 			// sine as default and case OscMode_Sine:
-			value = sin (twoPI * (phase + phaseShift));
+			value = sin(twoPI * (phase + phaseShift));
 			break;
 		case OscillatorMode::SAW:
 			value = 2 * ((phase + phaseShift) - 0.5);
@@ -84,14 +84,14 @@ namespace jr
 				value = -1;
 			break;
 		case OscillatorMode::TRIANGLE:
-			value = 4 * fabs ((phase + phaseShift) - 0.5);
+			value = 4 * fabs((phase + phaseShift) - 0.5);
 			break;
 		}
 
 		return value;
 	}
 
-	void Oscillator::processNextBlock (float* buffer, int numSamples)
+	void Oscillator::processNextBlock(float *buffer, int numSamples)
 	{
 		for (size_t i = 0; i < numSamples; i++)
 		{
@@ -105,27 +105,27 @@ namespace jr
 
 	float polyblepOscillator::processSingleSample()
 	{
-		float sampleOut{};
+		double sampleOut{};
 
 		if (oscMode == OscillatorMode::SINE)
 		{
-			sampleOut = naiveWaveformForMode (oscMode);
+			sampleOut = naiveWaveformForMode(oscMode);
 		}
 		else if (oscMode == OscillatorMode::SAW)
 		{
-			sampleOut = naiveWaveformForMode (oscMode);
-			sampleOut -= polyBLEP ((phase + phaseShift));
+			sampleOut = naiveWaveformForMode(oscMode);
+			sampleOut -= polyBLEP((phase + phaseShift));
 		}
 		else
 		{
 			// square wave
-			sampleOut = naiveWaveformForMode (OscillatorMode::SQUARE);
-			sampleOut += polyBLEP ((phase + phaseShift));
-			sampleOut -= polyBLEP (std::fmod ((phase + phaseShift) + 0.5, 1.0));			// fmod() clamps phase between 0-1 whilst offsetting value by 0.5
+			sampleOut = naiveWaveformForMode(OscillatorMode::SQUARE);
+			sampleOut += polyBLEP((phase + phaseShift));
+			sampleOut -= polyBLEP(std::fmod((phase + phaseShift) + 0.5, 1.0)); // fmod() clamps phase between 0-1 whilst offsetting value by 0.5
 
 			if (oscMode == OscillatorMode::TRIANGLE)
 			{
-				sampleOut = phaseDelta * sampleOut + (1 - phaseDelta) * lastOutput;		// leaky integrator: multiplying by (1 - phaseDelta) instead of 1 to stop output from accumulating
+				sampleOut = phaseDelta * sampleOut + (1 - phaseDelta) * lastOutput; // leaky integrator: multiplying by (1 - phaseDelta) instead of 1 to stop output from accumulating
 				lastOutput = sampleOut;
 			}
 		}
@@ -134,10 +134,10 @@ namespace jr
 		if ((phase + phaseShift) >= 1)
 			phase -= 1;
 
-		return sampleOut;
+		return static_cast<float>(sampleOut);
 	}
 
-	double polyblepOscillator::polyBLEP (double t)
+	double polyblepOscillator::polyBLEP(double t)
 	{
 		if (t < phaseDelta)
 		{
@@ -149,6 +149,7 @@ namespace jr
 			t = (t - 1.0) / phaseDelta;
 			return ((t * t) + t + t + 1.0);
 		}
-		else	return 0.0;
+		else
+			return 0.0;
 	}
 };
