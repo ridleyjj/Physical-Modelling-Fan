@@ -14,36 +14,42 @@ namespace jr
     */
     class Machine
     {
-        public:
-            Machine() {}
+    public:
+        Machine() {}
 
-            void setSampleRate(float _sampleRate);
+        void setSampleRate(float _sampleRate);
 
-            /**
-            Processes the next sample values of the system. Call getCurrentSampleLeft and getCurrentSampleRight
-            to reference the new values.
-            */
-            void process();
+        /**
+        Processes the next sample values of the system. Call getCurrentSampleLeft and getCurrentSampleRight
+        to reference the new values.
+        */
+        void process();
 
-            float getCurrentSampleLeft() { return currentSampleLeft; }
-            
-            float getCurrentSampleRight() { return currentSampleRight; }
+        float getCurrentSampleLeft() { return currentSampleLeft; }
 
-            void togglePower(bool powerOn) { powerOn ? envelope.powerOn() : envelope.powerOff(); }
+        float getCurrentSampleRight() { return currentSampleRight; }
 
-            //================= Fan Mutators =================//
+        void togglePower(bool powerOn) { powerOn ? envelope.powerOn() : envelope.powerOff(); }
 
-            void setSpeed(float speedInHz) { fan.setSpeed(speedInHz); }
-            void setFanLevel(float level) { fan.setLevel(level); }
-            void setFanToneLevel(float level) { fan.setToneLevel(level); }
-            void setFanNoiseLevel(float level) { fan.setNoiseLevel(level); }
-            void setFanStereoWidth(float level) { fan.setPanWidth(level); }
-            void setFanDoppler(bool isOn) { fan.setDopplerOn(isOn); }
+        //=============== Envelope Mutators ==============//
 
-        private:
-            MachineEnvelope envelope{};
-            FanPropeller fan{};
-            float currentSampleLeft{};
-            float currentSampleRight{};
+        void setAccelRate(float rate) { envelope.setAccelRate(rate); }
+        void setPowerUpTime(float seconds) { envelope.setPowerUpTime(seconds); }
+        void setPowerDownTime(float seconds) { envelope.setPowerDownTime(seconds); }
+
+        //================= Fan Mutators =================//
+
+        void setSpeed(float speedInHz) { fan.setSpeed(speedInHz); }
+        void setFanLevel(float level) { fan.setLevel(level); }
+        void setFanToneLevel(float level) { fan.setToneLevel(level); }
+        void setFanNoiseLevel(float level) { fan.setNoiseLevel(level); }
+        void setFanStereoWidth(float level) { fan.setPanWidth(level); }
+        void setFanDoppler(bool isOn) { fan.setDopplerOn(isOn); }
+
+    private:
+        MachineEnvelope envelope{};
+        FanPropeller fan{};
+        float currentSampleLeft{};
+        float currentSampleRight{};
     };
 }
