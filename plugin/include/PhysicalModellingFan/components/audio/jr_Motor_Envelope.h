@@ -21,86 +21,80 @@ namespace jr
     class MachineEnvelope
     {
     public:
-
         MachineEnvelope() {}
 
         //================== mutators ===================//
 
         /** Sets the sample rate
-        * @param sr - sample rate, Hz
-        */
-        void setSampleRate (float sr) 
-        { 
+         * @param sr - sample rate, Hz
+         */
+        void setSampleRate(float sr)
+        {
             sampleRate = sr;
-            volDelta = 1.0f / (powerDownTimeSeconds * sampleRate);
+            deltaPowerDown = 1.0f / (powerDownTimeSeconds * sampleRate);
         }
 
         /** Sets the time in seconds that it takes for the envelope to reach its max value from 0
-        * @param time - power up time, seconds
-        */
-        void setPowerUpTime (float time) { powerUpTimeSeconds = time; }
+         * @param time - power up time, seconds
+         */
+        void setPowerUpTime(float time)
+        {
+            powerUpTimeSeconds = time;
+            phase.reset(sampleRate, powerUpTimeSeconds);
+        }
 
         /** Sets the time in seconds that it takes for the envelope to fall from its max value to 0
-        * @param time - power down time, seconds
-        */
-        void setPowerDownTime (float time) 
-        { 
-            powerDownTimeSeconds = time; 
-            volDelta = 1.0f / (powerDownTimeSeconds * sampleRate);
+         * @param time - power down time, seconds
+         */
+        void setPowerDownTime(float time)
+        {
+            powerDownTimeSeconds = time;
+            deltaPowerDown = 1.0f / (powerDownTimeSeconds * sampleRate);
         }
 
         /** Sets the acceleration rate of the envelope
-        * @param rate - 0-1 value, where 0 is the minimum acceleration rate, and 1 is the max
-        */
-        void setAccelRate (float rate) { accelRate = rate; }
+         * @param rate - 0-1 value, where 0 is the minimum acceleration rate, and 1 is the max
+         */
+        void setAccelRate(float rate) { accelRate = rate; }
 
         //=============== actions ===============//
 
         /** Simulates motor turning on, by causing envelope to rise to its maximum value over set time
-        * @return
-        */
-        void powerOn() 
-        { 
-            phase.setCurrentAndTargetValue (0.0f); 
-            phase.reset (sampleRate, powerUpTimeSeconds);
-            phase.setTargetValue (0.5f);
+         * @return
+         */
+        void powerOn()
+        {
+            phase.setCurrentAndTargetValue(currentEnvValue * 0.5f); // phase is doubled for powerOn curve, so have current env value here
+            phase.setTargetValue(0.5f);
             isOn = true;
         }
 
         /** Simulates motor turning off, by causing envelope to fall to 0 over set time
-        * @return
-        */
+         * @return
+         */
         void powerOff()
         {
-            poweringOff = true;
-            phase.setCurrentAndTargetValue (0.0f);
+            isOn = false;
+            phase.setCurrentAndTargetValue(0.0f);
         }
 
         /** processes the envelope, updating the currentEnvValue and then returning this value
-        * @return currentEnvValue
-        */
+         * @return currentEnvValue
+         */
         float process()
         {
-            if (!poweringOff)
+            if (isOn)
             {
-                float currentPhaseVal = phase.getNextValue() * 2.0f;
-
-                float risingVal = 1.0f - juce::jmin (1.0f, currentPhaseVal);
-                risingVal = pow (risingVal, (3.0f + (accelRate * 6.0f)));
-
-                float fallingVal = juce::jmax (1.0f, currentPhaseVal) - 1.0f;
-
-                currentEnvValue = 1.0f + (-1.0f * (risingVal + fallingVal));
+                currentEnvValue = powerUpCurveGetNextValue();
             }
             else
             {
-                currentEnvValue -= volDelta;
+                // linear decrease
+                currentEnvValue -= deltaPowerDown;
 
                 if (currentEnvValue <= 0)
                 {
                     currentEnvValue = 0;
-                    poweringOff = false;
-                    isOn = false;
                 }
             }
 
@@ -114,14 +108,26 @@ namespace jr
         bool getIsPowerOn() { return isOn; }
 
     private:
+        float powerUpCurveGetNextValue()
+        {
+            float currentPhaseVal = phase.getNextValue() * 2.0f;
+
+            float risingVal = 1.0f - juce::jmin(1.0f, currentPhaseVal);
+            risingVal = pow(risingVal, (3.0f + (accelRate * 6.0f)));
+
+            float fallingVal = juce::jmax(1.0f, currentPhaseVal) - 1.0f;
+
+            return 1.0f - (risingVal + fallingVal);
+        }
+
         juce::SmoothedValue<float> phase{};
-        float powerUpTimeSeconds{ 1.5f };           // time in seconds for envelope to rise to max value
-        float powerDownTimeSeconds{ 1.5f };         // time in seconds for envelope to fall from max value
-        float volDelta{};                           // increment needed to linearly decrease volume from 1 to 0 over desired power down time
-        float accelRate{ 0.5f };                    // rate at which the envelope rises exponentially - 0-1 value, 0 is min rate, 1 is max
+        float powerUpTimeSeconds{1.5f};   // time in seconds for envelope to rise to max value
+        float powerDownTimeSeconds{1.5f}; // time in seconds for envelope to fall from max value
+        float deltaPowerDown{};           // increment needed to linearly decrease volume from 1 to 0 over desired power down time
+        float deltaPowerUp{};             // increment needed to linearly increase volume from 0 to 1 over desired power down time
+        float accelRate{0.5f};            // rate at which the envelope rises exponentially - 0-1 value, 0 is min rate, 1 is max
         float sampleRate{};
-        float currentEnvValue{};                    // current value of the envelope
-        bool poweringOff{ false };
-        bool isOn{ false };
+        float currentEnvValue{}; // current value of the envelope
+        bool isOn{false};
     };
 }
