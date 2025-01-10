@@ -22,7 +22,6 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.addParameterListener(ID::POWER, &powerToggleListener);
     apvts.addParameterListener(ID::POWER_UP_T, &powerUpTimeListener);
     apvts.addParameterListener(ID::POWER_DOWN_T, &powerDownTimeListener);
-    apvts.addParameterListener(ID::ACCEL_RATE, &accelRateListener);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -36,7 +35,6 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
     apvts.removeParameterListener(ID::POWER, &powerToggleListener);
     apvts.removeParameterListener(ID::POWER_UP_T, &powerUpTimeListener);
     apvts.removeParameterListener(ID::POWER_DOWN_T, &powerDownTimeListener);
-    apvts.removeParameterListener(ID::ACCEL_RATE, &accelRateListener);
 }
 
 //==============================================================================

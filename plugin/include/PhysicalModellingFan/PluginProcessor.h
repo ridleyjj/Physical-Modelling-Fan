@@ -66,7 +66,6 @@ public:
     void setSpeed(float speed) { machine.setSpeed(speed); }
 
     // envelope
-    void setAccelRate(float rate) { machine.setAccelRate(rate); }
     void setPowerUpTime(float seconds) { machine.setPowerUpTime(seconds); }
     void setPowerDownTime(float seconds) { machine.setPowerDownTime(seconds); }
 
@@ -103,8 +102,6 @@ private:
                                                { setFanDoppler(newValue); }};
     jr::ApvtsListener powerToggleListener{[&](bool newValue)
                                           { togglePower(newValue); }};
-    jr::ApvtsListener accelRateListener{[&](float newValue)
-                                        { setAccelRate(newValue); }};
     jr::ApvtsListener powerUpTimeListener{[&](float newValue)
                                           { setPowerUpTime(newValue); }};
     jr::ApvtsListener powerDownTimeListener{[&](float newValue)

@@ -33,7 +33,6 @@ namespace jr
 
         //=============== Envelope Mutators ==============//
 
-        void setAccelRate(float rate) { envelope.setAccelRate(rate); }
         void setPowerUpTime(float seconds) { envelope.setPowerUpTime(seconds); }
         void setPowerDownTime(float seconds) { envelope.setPowerDownTime(seconds); }
 

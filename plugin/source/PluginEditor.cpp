@@ -15,7 +15,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
     initSimpleSliderWithRange(&fanWidthSlider, &fanWidthLabel, "Fan Stereo With", -1.0, 1.0, 0.01);
     initSimpleSlider(&powerUpTimeSlider, &powerUpTimeLabel, "Power Up Time (s)");
     initSimpleSlider(&powerDownTimeSlider, &powerDownTimeLabel, "Power Down Time (s)");
-    initSimpleSlider(&accelRateSlider, &accelRateLabel, "Acceleration Rate");
 
     gainAttachment = createSliderAttachment(ID::GAIN, gainSlider);
     speedAttachment = createSliderAttachment(ID::SPEED, speedSlider);
@@ -24,7 +23,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
     fanWidthAttachment = std::make_unique<jr::MirrorSliderAttachment>(*(processorRef.getAPVTS().getParameter(ID::FAN_WIDTH)), fanWidthSlider);
     powerUpTimeAttachment = createSliderAttachment(ID::POWER_UP_T, powerUpTimeSlider);
     powerDownTimeAttachment = createSliderAttachment(ID::POWER_DOWN_T, powerDownTimeSlider);
-    accelRateAttachment = createSliderAttachment(ID::ACCEL_RATE, accelRateSlider);
 
     addAndMakeVisible(fanDopplerButton);
     addAndMakeVisible(powerButton);
@@ -86,7 +84,7 @@ void AudioPluginAudioProcessorEditor::resized()
     fanDopplerButton.setBoundsRelative(0.7f, 0.1f, 0.2f, 0.2f);
 
     // parallel vertical sliders
-    auto numSliders = 6.0f;
+    auto numSliders = 5.0f;
     auto fullWidth = 0.95f;
     auto sliderWidth = fullWidth / numSliders;
     auto startX = (1.0f - fullWidth) / 2.0f;
@@ -95,9 +93,8 @@ void AudioPluginAudioProcessorEditor::resized()
     fanToneSlider.setBoundsRelative(startX + sliderWidth, 0.35f, sliderWidth, 0.35f);
     fanNoiseSlider.setBoundsRelative(startX + (sliderWidth * 2.0f), 0.35f, sliderWidth, 0.35f);
     // envelope
-    accelRateSlider.setBoundsRelative(startX + (sliderWidth * 3.0f), 0.35f, sliderWidth, 0.35f);
-    powerUpTimeSlider.setBoundsRelative(startX + (sliderWidth * 4.0f), 0.35f, sliderWidth, 0.35f);
-    powerDownTimeSlider.setBoundsRelative(startX + (sliderWidth * 5.0f), 0.35f, sliderWidth, 0.35f);
+    powerUpTimeSlider.setBoundsRelative(startX + (sliderWidth * 3.0f), 0.35f, sliderWidth, 0.35f);
+    powerDownTimeSlider.setBoundsRelative(startX + (sliderWidth * 4.0f), 0.35f, sliderWidth, 0.35f);
 
     // bottom horizontal row
     fanWidthSlider.setBoundsRelative(0.1f, 0.8f, 0.8f, 0.2f);

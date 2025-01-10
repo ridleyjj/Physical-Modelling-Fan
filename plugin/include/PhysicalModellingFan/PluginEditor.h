@@ -34,7 +34,6 @@ private:
     juce::Slider speedSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
     juce::Slider powerUpTimeSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
     juce::Slider powerDownTimeSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
-    juce::Slider accelRateSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
 
     // fan
     juce::Slider gainSlider{juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow};
@@ -42,9 +41,9 @@ private:
     juce::Slider fanNoiseSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
     juce::Slider fanWidthSlider{juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox};
 
-    juce::Label gainLabel, speedLabel, fanToneLabel, fanNoiseLabel, fanWidthLabel, powerDownTimeLabel, powerUpTimeLabel, accelRateLabel;
+    juce::Label gainLabel, speedLabel, fanToneLabel, fanNoiseLabel, fanWidthLabel, powerDownTimeLabel, powerUpTimeLabel;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, speedAttachment, fanToneAttachment, fanNoiseAttachment, powerDownTimeAttachment, powerUpTimeAttachment, accelRateAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, speedAttachment, fanToneAttachment, fanNoiseAttachment, powerDownTimeAttachment, powerUpTimeAttachment;
     std::unique_ptr<jr::MirrorSliderAttachment> fanWidthAttachment;
 
     // Buttons & Labels

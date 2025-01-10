@@ -56,11 +56,6 @@ namespace jr
             deltaPowerDown = 1.0f / (powerDownTimeSeconds * sampleRate);
         }
 
-        /** Sets the acceleration rate of the envelope
-         * @param rate - 0-1 value, where 0 is the minimum acceleration rate, and 1 is the max
-         */
-        void setAccelRate(float rate) { accelRate = rate; }
-
         //=============== actions ===============//
 
         /** Simulates motor turning on, by causing envelope to rise to its maximum value over set time
@@ -118,7 +113,7 @@ namespace jr
             float currentPhaseVal = phase.getNextValue();
 
             float risingVal = 1.0f - juce::jmin(1.0f, currentPhaseVal);
-            risingVal = pow(risingVal, (3.0f + (accelRate * 6.0f)));
+            risingVal = pow(risingVal, 3.0f);
 
             float fallingVal = juce::jmax(1.0f, currentPhaseVal) - 1.0f;
 
@@ -129,7 +124,6 @@ namespace jr
         float powerUpTimeSeconds{1.5f};   // time in seconds for envelope to rise to max value
         float powerDownTimeSeconds{1.5f}; // time in seconds for envelope to fall from max value
         float deltaPowerDown{};           // increment needed to linearly decrease volume from 1 to 0 over desired power down time
-        float accelRate{0.5f};            // rate at which the envelope rises exponentially - 0-1 value, 0 is min rate, 1 is max
         float sampleRate{44000.0f};
         float currentEnvValue{}; // current value of the envelope
         bool isOn{false};
