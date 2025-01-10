@@ -23,7 +23,7 @@ namespace jr
 		//==================== Constructors/Destructos =======================//
 
 		Oscillator() : oscMode(OscillatorMode::SINE), PI(2 * acos(0.0)), twoPI(2 * PI),
-					   isMuted(true), frequency(440.0), phase(0.0), phaseDelta(0.0) {}
+					   isMuted(true), frequency(0.0), phase(0.0), phaseDelta(0.0) {}
 
 		~Oscillator() {}
 
@@ -133,7 +133,7 @@ namespace jr
 	private:
 		//============= parameters ============//
 
-		float lastOutput; // last sample value to be output, used for triangle wave BLEP
+		float lastOutput{}; // last sample value to be output, used for triangle wave BLEP
 
 		//============== functions ============//
 

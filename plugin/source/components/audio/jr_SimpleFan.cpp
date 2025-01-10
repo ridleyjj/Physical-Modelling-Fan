@@ -20,14 +20,14 @@ namespace jr
         rawSineSignal = sineOsc.processSingleSample();
 
         // waveshaping technique of 1/(1 + x^2) used to obtain narrow pulse wave
-        rawSignal = static_cast<float> (1.0 / (1.0 + pow(rawSineSignal * pulseWidth, 2)));
+        rawSignal = static_cast<float>(1.0 / (1.0 + pow(rawSineSignal * pulseWidth, 2)));
 
         return rawSignal * level;
     }
 
     //======================= Noise Component =========================//
 
-    void FanNoiseComponent::setFilterParams (float freq, float q)
+    void FanNoiseComponent::setFilterParams(float freq, float q)
     {
         if (freq > 0)
             cutoff = freq;
@@ -36,19 +36,19 @@ namespace jr
             resonance = q;
     }
 
-    float FanNoiseComponent::process (float rawSignalIn)
+    float FanNoiseComponent::process(float rawSignalIn)
     {
         switch (filterType)
         {
         default:
-            filter.setCoefficients (juce::IIRCoefficients::makeBandPass(sampleRate, cutoff, resonance));
+            filter.setCoefficients(juce::IIRCoefficients::makeBandPass(sampleRate, cutoff, resonance));
             break;
         case 1:
-            filter.setCoefficients (juce::IIRCoefficients::makeLowPass(sampleRate, cutoff, resonance));
+            filter.setCoefficients(juce::IIRCoefficients::makeLowPass(sampleRate, cutoff, resonance));
             break;
         }
 
-        float filteredNoise = filter.processSingleSampleRaw (random.nextFloat());
+        float filteredNoise = filter.processSingleSampleRaw(random.nextFloat());
 
         float sampleOut = filteredNoise * rawSignalIn;
 
@@ -57,7 +57,7 @@ namespace jr
 
     //======================= Panner Component =========================//
 
-    void FanPanner::process (float controlSignalIn)
+    void FanPanner::process(float controlSignalIn)
     {
         rightLevel = (((controlSignalIn + 1.0f) / 2.0f) * panWidth) + 0.5f - (panWidth / 2.0f);
 
@@ -66,7 +66,7 @@ namespace jr
 
     //======================= Doppler Component =========================//
 
-    void FanDopplerComponent::setDopplerParams (float controlSignalIn, float range, float offset, float q)
+    void FanDopplerComponent::setDopplerParams(float controlSignalIn, float range, float offset, float q)
     {
         cutoffRange = range;
         cutoffOffset = offset;
@@ -80,21 +80,21 @@ namespace jr
             dopplerCutoff = 0;
     }
 
-    float FanDopplerComponent::process (float rawSignalIn)
+    float FanDopplerComponent::process(float rawSignalIn)
     {
         if (dopplerOn)
         {
             switch (filterType)
             {
             default:
-                filter.setCoefficients (juce::IIRCoefficients::makeBandPass (sampleRate, dopplerCutoff, dopplerRes));
+                filter.setCoefficients(juce::IIRCoefficients::makeBandPass(sampleRate, dopplerCutoff, dopplerRes));
                 break;
             case 1:
-                filter.setCoefficients (juce::IIRCoefficients::makeLowPass (sampleRate, dopplerCutoff, dopplerRes));
+                filter.setCoefficients(juce::IIRCoefficients::makeLowPass(sampleRate, dopplerCutoff, dopplerRes));
                 break;
             }
 
-            float filteredNoise = filter.processSingleSampleRaw (random.nextFloat());
+            float filteredNoise = filter.processSingleSampleRaw(random.nextFloat());
 
             float sampleOut = filteredNoise * rawSignalIn;
 
@@ -102,27 +102,27 @@ namespace jr
         }
         else
         {
-            return FanNoiseComponent::process (rawSignalIn);
+            return FanNoiseComponent::process(rawSignalIn);
         }
     }
 
     //======================= Delay Component =========================//
 
-    void FanDelay::setSampleRate (float sr)
+    void FanDelay::setSampleRate(float sr)
     {
         sampleRate = sr;
 
-        delayLine.setSampleRate (sampleRate);
-        delayLine.setSize (0.4f);
+        delayLine.setSampleRate(sampleRate);
+        delayLine.setSize(0.4f);
     }
 
-    float FanDelay::process (float controlSignalIn, float audioSignalIn)
+    float FanDelay::process(float controlSignalIn, float audioSignalIn)
     {
         float delayTimeInMs = 200 + (controlSignalIn * chop);
 
-        delayLine.setDelayTime (delayTimeInMs / 1000.0f);
+        delayLine.setDelayTime(delayTimeInMs / 1000.0f);
 
-        return delayLine.process (audioSignalIn);
+        return delayLine.process(audioSignalIn);
     }
 
     //======================== Main Blades ==========================//
@@ -137,49 +137,50 @@ namespace jr
     {
         float toneOut = toneComp.process();
         setDopplerParams();
-        return level * (toneOut + noiseComp.process (toneComp.getRawSignal()));
+        return level * (toneOut + noiseComp.process(toneComp.getRawSignal()));
     }
 
     //======================== Fast Blades ==========================//
 
     FastBlades::FastBlades()
     {
-        noiseComp.setFilterType (1);
-        toneComp.setPhaseShift (0.25);
+        noiseComp.setFilterType(1);
+        toneComp.setPhaseShift(0.25);
     }
 
     void FastBlades::setSampleRate(float _sampleRate)
     {
-        toneComp.setSampleRate (_sampleRate);
-        noiseComp.setSampleRate (_sampleRate);
-        delayComp.setSampleRate (_sampleRate);
+        toneComp.setSampleRate(_sampleRate);
+        noiseComp.setSampleRate(_sampleRate);
+        delayComp.setSampleRate(_sampleRate);
     }
 
     float FastBlades::process()
     {
         float toneOut = toneComp.process();
-        float noiseOut = noiseComp.process (toneComp.getRawSignal());
+        float noiseOut = noiseComp.process(toneComp.getRawSignal());
         return level * (toneOut + delayComp.process(toneComp.getRawSine(), noiseOut));
     }
 
     //======================= Fan Propeller =========================//
 
-    void FanPropeller::setSampleRate (float sr)
+    void FanPropeller::setSampleRate(float sr)
     {
         mainBlades.setSampleRate(sr);
-        fastBlades.setSampleRate (sr);
+        fastBlades.setSampleRate(sr);
+        hasInit = true;
     }
 
-    void FanPropeller::setCurrentSpeed (float speedInHz)
+    void FanPropeller::setCurrentSpeed(float speedInHz)
     {
         mainBlades.setSpeed(speedInHz);
-        fastBlades.setSpeed (speedInHz);
+        fastBlades.setSpeed(speedInHz);
     }
 
-    void FanPropeller::setPulseWidth (float pw)
+    void FanPropeller::setPulseWidth(float pw)
     {
-        mainBlades.setPulseWidth (pw);
-        fastBlades.setPulseWidth (pw);
+        mainBlades.setPulseWidth(pw);
+        fastBlades.setPulseWidth(pw);
     }
 
     void FanPropeller::setToneLevel(float toneLevel)
@@ -196,12 +197,15 @@ namespace jr
 
     void FanPropeller::process(float envelope)
     {
+        if (!hasInit)
+            return;
+
         float currentSpeed = maxSpeed * envelope;
         setCurrentSpeed(currentSpeed);
 
         float rawOut = level * (fastBlades.process() + mainBlades.process());
 
-        pannerComp.process (mainBlades.getPanControlSignal());
+        pannerComp.process(mainBlades.getPanControlSignal());
 
         currentLeftSample = rawOut * pannerComp.getLeft();
         currentRightSample = rawOut * pannerComp.getRight();

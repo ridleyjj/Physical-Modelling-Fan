@@ -32,6 +32,7 @@ namespace jr
         {
             sampleRate = sr;
             deltaPowerDown = 1.0f / (powerDownTimeSeconds * sampleRate);
+            phase.reset(sampleRate, powerUpTimeSeconds);
         }
 
         /** Sets the time in seconds that it takes for the envelope to reach its max value from 0
@@ -40,7 +41,10 @@ namespace jr
         void setPowerUpTime(float time)
         {
             powerUpTimeSeconds = time;
-            phase.reset(sampleRate, powerUpTimeSeconds);
+            if (sampleRate > 0.0f)
+            {
+                phase.reset(sampleRate, powerUpTimeSeconds);
+            }
         }
 
         /** Sets the time in seconds that it takes for the envelope to fall from its max value to 0
@@ -65,7 +69,8 @@ namespace jr
         void powerOn()
         {
             phase.setCurrentAndTargetValue(currentEnvValue * 0.5f); // phase is doubled for powerOn curve, so have current env value here
-            phase.setTargetValue(0.5f);
+            phase.getNextValue();
+            phase.setTargetValue(1.0f);
             isOn = true;
         }
 
@@ -110,7 +115,7 @@ namespace jr
     private:
         float powerUpCurveGetNextValue()
         {
-            float currentPhaseVal = phase.getNextValue() * 2.0f;
+            float currentPhaseVal = phase.getNextValue();
 
             float risingVal = 1.0f - juce::jmin(1.0f, currentPhaseVal);
             risingVal = pow(risingVal, (3.0f + (accelRate * 6.0f)));
@@ -124,9 +129,8 @@ namespace jr
         float powerUpTimeSeconds{1.5f};   // time in seconds for envelope to rise to max value
         float powerDownTimeSeconds{1.5f}; // time in seconds for envelope to fall from max value
         float deltaPowerDown{};           // increment needed to linearly decrease volume from 1 to 0 over desired power down time
-        float deltaPowerUp{};             // increment needed to linearly increase volume from 0 to 1 over desired power down time
         float accelRate{0.5f};            // rate at which the envelope rises exponentially - 0-1 value, 0 is min rate, 1 is max
-        float sampleRate{};
+        float sampleRate{44000.0f};
         float currentEnvValue{}; // current value of the envelope
         bool isOn{false};
     };
