@@ -33,6 +33,7 @@ target_sources(${PROJECT_NAME}
         source/components/audio/jr_SimpleFan.cpp
         source/utils/jr_utils.cpp
         source/components/gui/MirrorSliderAttachment.cpp
+        source/components/services/jr_PresetManager.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
