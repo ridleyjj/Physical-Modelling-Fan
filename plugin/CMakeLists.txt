@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.22)
 
 project(AudioPlugin VERSION 0.1.0)
 
+set(COMPANY_NAME "RidleySound")
+
 juce_add_plugin(${PROJECT_NAME}
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -13,7 +15,7 @@ juce_add_plugin(${PROJECT_NAME}
     # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
     # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
-    COMPANY_NAME RidleySound
+    COMPANY_NAME ${COMPANY_NAME}
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE

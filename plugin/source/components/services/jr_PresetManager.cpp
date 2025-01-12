@@ -5,8 +5,8 @@ namespace jr
     const juce::File PresetManager::defaultDirectory{
         juce::File::getSpecialLocation(
             juce::File::SpecialLocationType::commonDocumentsDirectory)
-            .getChildFile(COMPANY_NAME)
-            .getChildFile(PROJECT_NAME)};
+            .getChildFile("RidleySound")
+            .getChildFile("PhysicalModellingFan")}; // TODO - find out how to define these as constants from the CMakeLists.txt file
     const juce::String PresetManager::extension{"preset"};
 
     PresetManager::PresetManager(juce::AudioProcessorValueTreeState &_apvts) : apvts(_apvts)
@@ -44,11 +44,8 @@ namespace jr
 
         const auto presetFile = getPresetFile(presetName);
         if (!presetFile.existsAsFile())
-        {
-            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
-            jassertfalse;
             return;
-        }
+
         if (!presetFile.deleteFile())
         {
             DBG("Preset file: " + presetFile.getFullPathName() + " could not be deleted");
@@ -65,11 +62,12 @@ namespace jr
 
         const auto presetFile = getPresetFile(presetName);
         if (!presetFile.existsAsFile())
-        {
-            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
-            jassertfalse;
             return;
-        }
+
+        juce::XmlDocument xmlDocument{presetFile};
+        const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDocument.getDocumentElement());
+        apvts.replaceState(valueTreeToLoad);
+        currentPreset = presetName;
     }
 
     //================= private methods =====================
@@ -82,5 +80,6 @@ namespace jr
             DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
             jassertfalse;
         }
+        return presetFile;
     }
 }

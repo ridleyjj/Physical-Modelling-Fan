@@ -15,7 +15,7 @@ namespace jr
         void loadPreset(const juce::String &presetName);
 
     private:
-        juce::File getPresetFile(const juce::String &presetName) { return defaultDirectory.getChildFile(presetName + "." + extension); }
+        juce::File getPresetFile(const juce::String &presetName);
 
         juce::AudioProcessorValueTreeState &apvts;
         juce::String currentPreset;
