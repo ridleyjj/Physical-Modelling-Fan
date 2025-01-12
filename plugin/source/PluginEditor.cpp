@@ -30,6 +30,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
     dopplerAttachment = createButtonAttachment(ID::FAN_DOPPLER, fanDopplerButton);
     powerButtonAttachment = createButtonAttachment(ID::POWER, powerButton);
 
+    addAndMakeVisible(presetPanel);
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize(600, 600);
@@ -78,10 +80,15 @@ void AudioPluginAudioProcessorEditor::paint(juce::Graphics &g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    // top horizontal row
-    gainSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.2f);
-    powerButton.setBoundsRelative(0.4f, 0.1f, 0.2f, 0.2f);
-    fanDopplerButton.setBoundsRelative(0.7f, 0.1f, 0.2f, 0.2f);
+
+    // top presets row
+    presetPanel.setBoundsRelative(0.0f, 0.0f, 1.0f, 0.1f);
+
+    // top controls horizontal row
+    const auto topRowHeight = 0.2f;
+    gainSlider.setBoundsRelative(0.1f, 0.1f, 0.15f, topRowHeight);
+    powerButton.setBoundsRelative(0.4f, 0.1f, 0.2f, topRowHeight);
+    fanDopplerButton.setBoundsRelative(0.7f, 0.1f, 0.2f, topRowHeight);
 
     // parallel vertical sliders
     auto numSliders = 5.0f;
@@ -97,5 +104,5 @@ void AudioPluginAudioProcessorEditor::resized()
     powerDownTimeSlider.setBoundsRelative(startX + (sliderWidth * 4.0f), 0.35f, sliderWidth, 0.35f);
 
     // bottom horizontal row
-    fanWidthSlider.setBoundsRelative(0.1f, 0.8f, 0.8f, 0.2f);
+    fanWidthSlider.setBoundsRelative(0.1f, 0.8f, 0.8f, 0.15f);
 }

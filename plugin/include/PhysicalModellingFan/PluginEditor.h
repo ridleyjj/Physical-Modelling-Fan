@@ -3,6 +3,7 @@
 #include "PluginProcessor.h"
 #include <memory>
 #include <PhysicalModellingFan/components/gui/MirrorSliderAttachment.h>
+#include <PhysicalModellingFan/components/gui/PresetPanel.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -50,6 +51,10 @@ private:
 
     juce::ToggleButton fanDopplerButton{"Doppler On/Off"};
     juce::ToggleButton powerButton{"Power On/Off"};
+
+    // Presets
+
+    jr::PresetPanel presetPanel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> dopplerAttachment, powerButtonAttachment;
 
