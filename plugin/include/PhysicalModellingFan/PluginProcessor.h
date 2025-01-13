@@ -4,6 +4,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <PhysicalModellingFan/components/audio/jr_Machine.h>
 #include <PhysicalModellingFan/components/audio/ApvtsListener.h>
+#include <PhysicalModellingFan/components/services/jr_PresetManager.h>
 
 namespace ID
 {
@@ -80,9 +81,13 @@ public:
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
+    jr::PresetManager &getPresetManager() { return *presetManager; }
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
+
+    std::unique_ptr<jr::PresetManager> presetManager;
 
     jr::Machine machine{};
 

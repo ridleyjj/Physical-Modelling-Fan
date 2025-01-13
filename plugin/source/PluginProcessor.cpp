@@ -13,6 +13,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                          ),
       apvts(*this, nullptr, "PARAMETERS", createParameterLayout())
 {
+    apvts.state.setProperty(jr::PresetManager::presetNameProperty, "", nullptr);
+
     apvts.addParameterListener(ID::GAIN, &masterGainListener);
     apvts.addParameterListener(ID::SPEED, &speedListener);
     apvts.addParameterListener(ID::FAN_TONE, &fanToneLevelListener);
@@ -22,6 +24,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     apvts.addParameterListener(ID::POWER, &powerToggleListener);
     apvts.addParameterListener(ID::POWER_UP_T, &powerUpTimeListener);
     apvts.addParameterListener(ID::POWER_DOWN_T, &powerDownTimeListener);
+
+    presetManager = std::make_unique<jr::PresetManager>(apvts);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()

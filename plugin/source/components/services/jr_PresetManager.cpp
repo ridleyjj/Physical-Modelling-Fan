@@ -8,6 +8,7 @@ namespace jr
             .getChildFile("RidleySound")
             .getChildFile("PhysicalModellingFan")}; // TODO - find out how to define these as constants from the CMakeLists.txt file
     const juce::String PresetManager::extension{"preset"};
+    const juce::String PresetManager::presetNameProperty{"presetName"};
 
     PresetManager::PresetManager(juce::AudioProcessorValueTreeState &_apvts) : apvts(_apvts)
     {
@@ -20,6 +21,9 @@ namespace jr
                 jassertfalse;
             }
         }
+
+        apvts.state.addListener(this);
+        currentPreset.referTo(apvts.state.getPropertyAsValue(presetNameProperty, nullptr));
     }
 
     void PresetManager::savePreset(const juce::String &presetName)
@@ -27,6 +31,7 @@ namespace jr
         if (presetName.isEmpty())
             return;
 
+        currentPreset.setValue(presetName);
         const auto xmlState = apvts.copyState().createXml();
         const auto presetFile = getPresetFile(presetName);
         if (!xmlState->writeTo(presetFile))
@@ -34,7 +39,6 @@ namespace jr
             DBG("Could not create preset file: " + presetFile.getFullPathName());
             jassertfalse;
         }
-        currentPreset = presetName;
     }
 
     void PresetManager::deletePreset(const juce::String &presetName)
@@ -44,7 +48,11 @@ namespace jr
 
         const auto presetFile = getPresetFile(presetName);
         if (!presetFile.existsAsFile())
+        {
+            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
+            jassertfalse;
             return;
+        }
 
         if (!presetFile.deleteFile())
         {
@@ -52,7 +60,7 @@ namespace jr
             jassertfalse;
             return;
         }
-        currentPreset = "";
+        currentPreset.setValue("");
     }
 
     void PresetManager::loadPreset(const juce::String &presetName)
@@ -62,24 +70,39 @@ namespace jr
 
         const auto presetFile = getPresetFile(presetName);
         if (!presetFile.existsAsFile())
+        {
+            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
+            jassertfalse;
             return;
+        }
 
         juce::XmlDocument xmlDocument{presetFile};
         const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDocument.getDocumentElement());
         apvts.replaceState(valueTreeToLoad);
-        currentPreset = presetName;
+        currentPreset.setValue(presetName);
+    }
+
+    juce::StringArray PresetManager::getAllPresets()
+    {
+        const auto fileArray = defaultDirectory.findChildFiles(
+            juce::File::TypesOfFileToFind::findFiles, false, "*." + extension);
+        juce::StringArray presets;
+        for (const auto &file : fileArray)
+        {
+            presets.add(file.getFileNameWithoutExtension());
+        }
+        return presets;
     }
 
     //================= private methods =====================
 
+    void PresetManager::valueTreeRedirected(juce::ValueTree &treeWhichHasBeenChanged)
+    {
+        currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
+    }
+
     juce::File PresetManager::getPresetFile(const juce::String &presetName)
     {
-        const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-        if (!presetFile.existsAsFile())
-        {
-            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
-            jassertfalse;
-        }
-        return presetFile;
+        return defaultDirectory.getChildFile(presetName + "." + extension);
     }
 }
