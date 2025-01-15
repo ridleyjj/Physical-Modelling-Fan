@@ -4,6 +4,7 @@
 #include <memory>
 #include <PhysicalModellingFan/components/gui/MirrorSliderAttachment.h>
 #include <PhysicalModellingFan/components/gui/PresetPanel.h>
+#include <PhysicalModellingFan/components/gui/jr_FanControls.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -13,10 +14,6 @@ public:
     ~AudioPluginAudioProcessorEditor() override;
 
     //==============================================================================
-    void initSimpleSlider(juce::Slider *slider, juce::Label *label, const juce::String &name);
-
-    void initSimpleSliderWithRange(juce::Slider *slider, juce::Label *label, const juce::String &name, double minVal, double maxVal, double step);
-
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> createSliderAttachment(juce::String id, juce::Slider &slider);
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> createButtonAttachment(juce::String id, juce::Button &button);
 
@@ -37,7 +34,10 @@ private:
     juce::Slider powerDownTimeSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
 
     // fan
+    // TODO - remove this fan gain slider and replace it with a master gain slider. Fan overall volume can simply be managed through tone and noise levels
     juce::Slider gainSlider{juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow};
+    jr::FanControls fanControls;
+
     juce::Slider fanToneSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
     juce::Slider fanNoiseSlider{juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow};
     juce::Slider fanWidthSlider{juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox};
