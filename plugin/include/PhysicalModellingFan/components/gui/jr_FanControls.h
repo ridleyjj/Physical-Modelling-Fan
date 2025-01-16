@@ -7,11 +7,17 @@
 
 namespace jr
 {
+    /**
+     * A class that contains all of the controls related to the Fan only.
+     */
     class FanControls : public juce::Component
     {
     public:
         FanControls(AudioPluginAudioProcessor &p) : processorRef(p) {}
 
+        /**
+         * Initialises all sliders, buttons and their attachments.
+         */
         void init()
         {
             jr::JuceUtils::initSimpleSlider(this, &toneSlider, &toneLabel, "Fan Tone");
@@ -38,6 +44,9 @@ namespace jr
             dopplerButton.setBounds(bottomRow.reduced(marginX, marginY));
         }
 
+    private:
+        AudioPluginAudioProcessor &processorRef;
+
         juce::Slider toneSlider{juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::TextBoxBelow};
         juce::Slider noiseSlider{juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::TextBoxBelow};
         juce::Slider widthSlider{juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox};
@@ -51,7 +60,6 @@ namespace jr
 
         std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> dopplerAttachment;
 
-    private:
-        AudioPluginAudioProcessor &processorRef;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FanControls)
     };
 }

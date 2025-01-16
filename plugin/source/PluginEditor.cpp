@@ -5,27 +5,15 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor &p)
-    : AudioProcessorEditor(&p), processorRef(p), presetPanel(p.getPresetManager()), fanControls(p)
+    : AudioProcessorEditor(&p), processorRef(p), presetPanel(p.getPresetManager()), fanControls(p), sharedControls(p)
 {
 
     fanControls.init();
-
-    jr::JuceUtils::initSimpleSlider(this, &gainSlider, &gainLabel, "Gain");
-    jr::JuceUtils::initSimpleSlider(this, &speedSlider, &speedLabel, "Speed");
-    jr::JuceUtils::initSimpleSlider(this, &powerUpTimeSlider, &powerUpTimeLabel, "Power Up Time (s)");
-    jr::JuceUtils::initSimpleSlider(this, &powerDownTimeSlider, &powerDownTimeLabel, "Power Down Time (s)");
-
-    gainAttachment = createSliderAttachment(ID::GAIN, gainSlider);
-    speedAttachment = createSliderAttachment(ID::SPEED, speedSlider);
-    powerUpTimeAttachment = createSliderAttachment(ID::POWER_UP_T, powerUpTimeSlider);
-    powerDownTimeAttachment = createSliderAttachment(ID::POWER_DOWN_T, powerDownTimeSlider);
-
-    addAndMakeVisible(powerButton);
-
-    powerButtonAttachment = createButtonAttachment(ID::POWER, powerButton);
+    sharedControls.init();
 
     addAndMakeVisible(presetPanel);
     addAndMakeVisible(fanControls);
+    addAndMakeVisible(sharedControls);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -34,17 +22,6 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
-}
-
-//==============================================================================
-std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> AudioPluginAudioProcessorEditor::createSliderAttachment(juce::String id, juce::Slider &slider)
-{
-    return std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processorRef.getAPVTS(), id, slider);
-}
-
-std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> AudioPluginAudioProcessorEditor::createButtonAttachment(juce::String id, juce::Button &button)
-{
-    return std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(processorRef.getAPVTS(), id, button);
 }
 
 //==============================================================================
@@ -60,21 +37,6 @@ void AudioPluginAudioProcessorEditor::resized()
     // top presets row
     presetPanel.setBoundsRelative(0.0f, 0.0f, 1.0f, 0.1f);
 
-    // top controls horizontal row
-    const auto topRowHeight = 0.2f;
-    gainSlider.setBoundsRelative(0.1f, 0.1f, 0.15f, topRowHeight);
-    powerButton.setBoundsRelative(0.4f, 0.1f, 0.2f, topRowHeight);
-
-    // parallel vertical sliders
-    auto numSliders = 3.0f;
-    auto fullWidth = 0.45f;
-    auto sliderWidth = fullWidth / numSliders;
-    auto startX = fullWidth + 0.1f;
-
-    speedSlider.setBoundsRelative(startX, 0.35f, sliderWidth, 0.6f);
-    //  envelope
-    powerUpTimeSlider.setBoundsRelative(startX + (sliderWidth), 0.35f, sliderWidth, 0.6f);
-    powerDownTimeSlider.setBoundsRelative(startX + (sliderWidth * 2.0f), 0.35f, sliderWidth, 0.6f);
-
-    fanControls.setBoundsRelative(0.0f, 0.35f, 0.5f, 0.65f);
+    fanControls.setBoundsRelative(0.0f, 0.1f, 0.5f, 0.9f);
+    sharedControls.setBoundsRelative(0.5f, 0.1f, 0.5f, 0.9f);
 }
