@@ -36,6 +36,7 @@ target_sources(${PROJECT_NAME}
         source/utils/jr_utils.cpp
         source/components/gui/MirrorSliderAttachment.cpp
         source/components/services/jr_PresetManager.cpp
+        source/LookAndFeel/Resources/BinaryData.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

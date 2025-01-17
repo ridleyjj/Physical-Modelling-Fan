@@ -7,6 +7,8 @@
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor &p)
     : AudioProcessorEditor(&p), processorRef(p), presetPanel(p.getPresetManager()), fanControls(p), sharedControls(p)
 {
+    juce::LookAndFeel::setDefaultLookAndFeel(&myLookAndFeel);
+    setLookAndFeel(&myLookAndFeel);
 
     fanControls.init();
     sharedControls.init();
@@ -22,6 +24,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
+    juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
 }
 
 //==============================================================================

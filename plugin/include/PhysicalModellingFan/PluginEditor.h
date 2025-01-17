@@ -1,11 +1,10 @@
 #pragma once
 
 #include "PluginProcessor.h"
-#include <memory>
-#include <PhysicalModellingFan/components/gui/MirrorSliderAttachment.h>
 #include <PhysicalModellingFan/components/gui/PresetPanel.h>
 #include <PhysicalModellingFan/components/gui/jr_FanControls.h>
 #include <PhysicalModellingFan/components/gui/jr_SharedControls.h>
+#include <PhysicalModellingFan/LookAndFeel/jr_StyleSheet.h>
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -26,6 +25,8 @@ private:
     jr::FanControls fanControls;
     jr::SharedControls sharedControls;
     jr::PresetPanel presetPanel;
+
+    jr::CustomLookAndFeel myLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorEditor)
 };
