@@ -402,11 +402,6 @@ namespace jr
          */
         void setFastNoiseLevel(float vol) { fastBlades.setNoiseLevel(vol); }
 
-        /** Sets the master volume level for the fan
-         * @param vol - volume (0-1)
-         */
-        void setLevel(float vol) { level = vol; }
-
         /** processes the next sample values for the fans left and right channels
          */
         void process(float envelope);
@@ -439,7 +434,6 @@ namespace jr
         bool hasInit{false};
 
         float maxSpeed{};           // max speed in Hz
-        float level{0.5f};          // master volume for fan
         float currentLeftSample{};  // current sample value for left channel
         float currentRightSample{}; // current sample value for right channel
     };

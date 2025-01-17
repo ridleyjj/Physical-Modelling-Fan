@@ -71,7 +71,7 @@ public:
     void setPowerDownTime(float seconds) { machine.setPowerDownTime(seconds); }
 
     // fan
-    void setMasterGain(float gain) { machine.setFanLevel(gain); }
+    void setMasterGain(float gain) { machine.setGain(gain); }
     void setFanToneLevel(float level) { machine.setFanToneLevel(level); }
     void setFanNoiseLevel(float level) { machine.setFanNoiseLevel(level); }
     void setFanStereoWidth(float width) { machine.setFanStereoWidth(width); }

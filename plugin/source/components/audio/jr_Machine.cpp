@@ -8,6 +8,7 @@ namespace jr
         {
             envelope.setSampleRate(_sampleRate);
             fan.setSampleRate(_sampleRate);
+            gain.reset(_sampleRate, gainSmoothingInS);
         }
     }
 
@@ -15,8 +16,9 @@ namespace jr
     {
         envelope.process();
         fan.process(envelope.getCurrentValue());
+        gain.getNextValue();
 
-        currentSampleLeft = fan.getLeftSample() * envelope.getCurrentValue();
-        currentSampleRight = fan.getRightSample() * envelope.getCurrentValue();
+        currentSampleLeft = gain.getCurrentValue() * fan.getLeftSample() * envelope.getCurrentValue();
+        currentSampleRight = gain.getCurrentValue() * fan.getRightSample() * envelope.getCurrentValue();
     }
 }

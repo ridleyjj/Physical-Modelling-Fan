@@ -203,7 +203,7 @@ namespace jr
         float currentSpeed = maxSpeed * envelope;
         setCurrentSpeed(currentSpeed);
 
-        float rawOut = level * (fastBlades.process() + mainBlades.process());
+        float rawOut = (fastBlades.process() + mainBlades.process());
 
         pannerComp.process(mainBlades.getPanControlSignal());
 

@@ -39,7 +39,7 @@ namespace jr
         //================= Fan Mutators =================//
 
         void setSpeed(float speedInHz) { fan.setSpeed(speedInHz); }
-        void setFanLevel(float level) { fan.setLevel(level); }
+        void setGain(float value) { gain.setTargetValue(value); }
         void setFanToneLevel(float level) { fan.setToneLevel(level); }
         void setFanNoiseLevel(float level) { fan.setNoiseLevel(level); }
         void setFanStereoWidth(float level) { fan.setPanWidth(level); }
@@ -50,5 +50,7 @@ namespace jr
         FanPropeller fan{};
         float currentSampleLeft{};
         float currentSampleRight{};
+        juce::SmoothedValue<float> gain;
+        float gainSmoothingInS{0.1f};
     };
 }

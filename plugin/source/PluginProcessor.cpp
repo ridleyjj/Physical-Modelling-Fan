@@ -114,7 +114,7 @@ void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     machine.setSampleRate((float)sampleRate);
     machine.setSpeed(*apvts.getRawParameterValue(ID::SPEED));
     machine.setFanDoppler(*apvts.getRawParameterValue(ID::FAN_DOPPLER));
-    machine.setFanLevel(*apvts.getRawParameterValue(ID::GAIN));
+    machine.setGain(*apvts.getRawParameterValue(ID::GAIN));
 }
 
 void AudioPluginAudioProcessor::releaseResources()
